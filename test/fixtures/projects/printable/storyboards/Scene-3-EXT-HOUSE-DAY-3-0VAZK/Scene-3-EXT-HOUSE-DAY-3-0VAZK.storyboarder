@@ -1,0 +1,141 @@
+{
+  "version": "2.1.0",
+  "aspectRatio": "1.7777777777777777",
+  "fps": 24,
+  "defaultBoardTiming": 2000,
+  "boards": [
+    {
+      "uid": "XXWEA",
+      "url": "board-2-XXWEA.png",
+      "newShot": false,
+      "lastEdited": 1610131592792,
+      "layers": {
+        "pencil": {
+          "url": "board-2-XXWEA-pencil.png"
+        },
+        "shot-generator": {
+          "url": "board-2-XXWEA-shot-generator.png",
+          "opacity": 0.75
+        },
+        "reference": {
+          "url": "board-2-XXWEA-reference.png",
+          "opacity": 0.75
+        },
+        "fill": {
+          "url": "board-2-XXWEA-fill.png"
+        },
+        "tone": {
+          "url": "board-2-XXWEA-tone.png"
+        },
+        "ink": {
+          "url": "board-2-XXWEA-ink.png"
+        },
+        "notes": {
+          "url": "board-2-XXWEA-notes.png"
+        }
+      },
+      "number": 1,
+      "shot": "1A",
+      "time": 0,
+      "lineMileage": 7453.548732588974,
+      "duration": "1500",
+      "action": "Outside again. The caller waves.",
+      "notes": ""
+    },
+    {
+      "uid": "P4OP7",
+      "url": "board-2-P4OP7.png",
+      "newShot": false,
+      "lastEdited": 1610131692272,
+      "layers": {
+        "pencil": {
+          "url": "board-2-P4OP7-pencil.png"
+        },
+        "shot-generator": {
+          "url": "board-2-P4OP7-shot-generator.png",
+          "opacity": 0.75
+        },
+        "reference": {
+          "url": "board-2-P4OP7-reference.png",
+          "opacity": 0.75
+        },
+        "fill": {
+          "url": "board-2-P4OP7-fill.png"
+        },
+        "tone": {
+          "url": "board-2-P4OP7-tone.png"
+        },
+        "ink": {
+          "url": "board-2-P4OP7-ink.png"
+        },
+        "notes": {
+          "url": "board-2-P4OP7-notes.png"
+        }
+      },
+      "number": 2,
+      "shot": "2A",
+      "time": 1500,
+      "lineMileage": 13266.195382028869,
+      "duration": "1500",
+      "action": "",
+      "notes": "",
+      "audio": null,
+      "dialogue": ""
+    },
+    {
+      "uid": "3WAYO",
+      "url": "board-2-3WAYO.png",
+      "newShot": false,
+      "lastEdited": 1610131730266,
+      "layers": {
+        "pencil": {
+          "url": "board-2-3WAYO-pencil.png"
+        },
+        "shot-generator": {
+          "url": "board-2-3WAYO-shot-generator.png",
+          "opacity": 0.75
+        },
+        "reference": {
+          "url": "board-2-3WAYO-reference.png",
+          "opacity": 0.75
+        },
+        "fill": {
+          "url": "board-2-3WAYO-fill.png"
+        },
+        "tone": {
+          "url": "board-2-3WAYO-tone.png"
+        },
+        "ink": {
+          "url": "board-2-3WAYO-ink.png"
+        },
+        "notes": {
+          "url": "board-2-3WAYO-notes.png"
+        }
+      },
+      "number": 3,
+      "shot": "3A",
+      "time": 3000,
+      "lineMileage": 7453.548732588974,
+      "duration": "1500",
+      "action": "",
+      "notes": "",
+      "audio": null,
+      "dialogue": ""
+    },
+    {
+      "uid": "EOQXI",
+      "url": "board-4-EOQXI.png",
+      "newShot": false,
+      "lastEdited": 1610131745620,
+      "layers": {
+        "pencil": {
+          "url": "board-4-EOQXI-pencil.png"
+        }
+      },
+      "number": 4,
+      "shot": "4A",
+      "time": 4500,
+      "lineMileage": 1162.5813570588068
+    }
+  ]
+}

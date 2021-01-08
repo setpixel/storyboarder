@@ -1,0 +1,1144 @@
+{
+  "version": "2.1.0",
+  "aspectRatio": "1.7777777777777777",
+  "fps": 24,
+  "defaultBoardTiming": 2000,
+  "boards": [
+    {
+      "uid": "Q9UBB",
+      "url": "board-1-Q9UBB.png",
+      "newShot": false,
+      "lastEdited": 1610131200629,
+      "layers": {
+        "pencil": {
+          "url": "board-1-Q9UBB-pencil.png"
+        },
+        "shot-generator": {
+          "url": "board-1-Q9UBB-shot-generator.png",
+          "opacity": 1,
+          "thumbnail": "board-1-Q9UBB-shot-generator-thumbnail.jpg"
+        },
+        "reference": {
+          "url": "board-1-Q9UBB-reference.png",
+          "opacity": 1
+        },
+        "fill": {
+          "url": "board-1-Q9UBB-fill.png"
+        },
+        "tone": {
+          "url": "board-1-Q9UBB-tone.png"
+        },
+        "ink": {
+          "url": "board-1-Q9UBB-ink.png"
+        },
+        "notes": {
+          "url": "board-1-Q9UBB-notes.png"
+        }
+      },
+      "number": 1,
+      "shot": "1A",
+      "time": 0,
+      "lineMileage": 4106.224409139429,
+      "sg": {
+        "version": "2.1.0",
+        "data": {
+          "world": {
+            "ground": true,
+            "backgroundColor": 15066597,
+            "room": {
+              "visible": false,
+              "width": 10,
+              "length": 10,
+              "height": 3
+            },
+            "environment": {
+              "x": 0,
+              "y": 0,
+              "z": 0,
+              "rotation": 0,
+              "scale": 1,
+              "visible": true,
+              "grayscale": true
+            },
+            "ambient": {
+              "intensity": 0.5
+            },
+            "directional": {
+              "intensity": 0.5,
+              "rotation": -0.9,
+              "tilt": 0.75
+            },
+            "fog": {
+              "visible": true,
+              "far": 40
+            },
+            "shadingMode": "Outline"
+          },
+          "sceneObjects": {
+            "6BC46A44-7965-43B5-B290-E3D2B9D15EEE": {
+              "id": "6BC46A44-7965-43B5-B290-E3D2B9D15EEE",
+              "type": "camera",
+              "fov": 22.25,
+              "x": 0,
+              "y": 6,
+              "z": 1,
+              "rotation": 0,
+              "tilt": 0,
+              "roll": 0,
+              "displayName": "Camera 1"
+            },
+            "DDD82F80-42BF-42C2-B319-E8B8CAC1879F": {
+              "id": "DDD82F80-42BF-42C2-B319-E8B8CAC1879F",
+              "type": "character",
+              "height": 1.8,
+              "model": "adult-male",
+              "x": -0.12797265211338474,
+              "y": 0.8762323919850632,
+              "z": 0,
+              "rotation": 0.024971087968238194,
+              "headScale": 1,
+              "tintColor": "#000000",
+              "morphTargets": {
+                "mesomorphic": 0,
+                "ectomorphic": 0,
+                "endomorphic": 0
+              },
+              "skeleton": {
+                "RightArm": {
+                  "rotation": {
+                    "x": 1.0572281503249576,
+                    "y": 0.13045098744278888,
+                    "z": 0.15704634331932024
+                  },
+                  "name": "RightArm"
+                },
+                "LeftArm": {
+                  "rotation": {
+                    "x": 0.14128058399531712,
+                    "y": 0.23508350617856008,
+                    "z": -0.4648901973513831
+                  },
+                  "name": "LeftArm"
+                },
+                "LeftForeArm": {
+                  "rotation": {
+                    "x": 0.557927196111246,
+                    "y": -0.834499453329505,
+                    "z": 2.375779194965713
+                  },
+                  "name": "LeftForeArm"
+                },
+                "RightForeArm": {
+                  "rotation": {
+                    "x": 0.08067946276951024,
+                    "y": -0.19368492512058164,
+                    "z": -0.27250747776269885
+                  },
+                  "name": "RightForeArm"
+                },
+                "Hips": {
+                  "rotation": {
+                    "x": 1.9387823613214743e-7,
+                    "y": 4.282295465966097e-17,
+                    "z": -3.667670913284645e-24
+                  },
+                  "name": "Hips"
+                },
+                "Spine": {
+                  "rotation": {
+                    "x": -0.14498159765920476,
+                    "y": -4.74564766008841e-17,
+                    "z": 3.7896614883728235e-17
+                  },
+                  "name": "Spine"
+                },
+                "Spine1": {
+                  "rotation": {
+                    "x": -1.3518127392481517e-7,
+                    "y": -1.2846886783106722e-16,
+                    "z": 8.585178095630117e-17
+                  },
+                  "name": "Spine1"
+                },
+                "Spine2": {
+                  "rotation": {
+                    "x": 3.182528853395459e-7,
+                    "y": -8.768095761660505e-12,
+                    "z": 1.0632402669429775e-11
+                  },
+                  "name": "Spine2"
+                },
+                "Neck": {
+                  "rotation": {
+                    "x": 0.14498143677422434,
+                    "y": 2.6045015020456736e-10,
+                    "z": -2.7022405391266433e-11
+                  },
+                  "name": "Neck"
+                },
+                "Head": {
+                  "rotation": {
+                    "x": -2.8686872182478014e-12,
+                    "y": 3.6305760003855907e-10,
+                    "z": 1.5282293142137523e-10
+                  },
+                  "name": "Head"
+                },
+                "LeftEye": {
+                  "rotation": {
+                    "x": 1.5685844264309015,
+                    "y": 0.0000033378677598696393,
+                    "z": 9.992306372543219e-14
+                  },
+                  "name": "LeftEye"
+                },
+                "RightEye": {
+                  "rotation": {
+                    "x": 1.5685844264309015,
+                    "y": 0.0000033378677598696393,
+                    "z": 9.992306372543219e-14
+                  },
+                  "name": "RightEye"
+                },
+                "LeftShoulder": {
+                  "rotation": {
+                    "x": 1.5529170675763222,
+                    "y": -0.34194233329535767,
+                    "z": -1.6250956633495321
+                  },
+                  "name": "LeftShoulder"
+                },
+                "LeftHand": {
+                  "rotation": {
+                    "x": -0.03402822072563018,
+                    "y": 0.07546629974374001,
+                    "z": -0.05357724216564727
+                  },
+                  "name": "LeftHand"
+                },
+                "LeftHandThumb1": {
+                  "rotation": {
+                    "x": 0.2052031569844975,
+                    "y": 0.15859724454011803,
+                    "z": 0.6491212219089899
+                  },
+                  "name": "LeftHandThumb1"
+                },
+                "LeftHandThumb2": {
+                  "rotation": {
+                    "x": 0.19247699066441015,
+                    "y": -0.000001129201199306088,
+                    "z": 1.3557413986795587e-7
+                  },
+                  "name": "LeftHandThumb2"
+                },
+                "LeftHandThumb3": {
+                  "rotation": {
+                    "x": -0.17245327134443275,
+                    "y": 0.0000025075078985789942,
+                    "z": 9.22443084099982e-7
+                  },
+                  "name": "LeftHandThumb3"
+                },
+                "LeftHandIndex1": {
+                  "rotation": {
+                    "x": 0.030225464783788205,
+                    "y": 0.006747517262886497,
+                    "z": 0.2196464345200666
+                  },
+                  "name": "LeftHandIndex1"
+                },
+                "LeftHandIndex2": {
+                  "rotation": {
+                    "x": 0.09948950075321661,
+                    "y": -2.6361429232659274e-7,
+                    "z": -6.943183071373417e-7
+                  },
+                  "name": "LeftHandIndex2"
+                },
+                "LeftHandIndex3": {
+                  "rotation": {
+                    "x": -0.09980937610791331,
+                    "y": 0.0000012914105938542217,
+                    "z": 6.562784695020921e-7
+                  },
+                  "name": "LeftHandIndex3"
+                },
+                "LeftHandMiddle1": {
+                  "rotation": {
+                    "x": -0.040930044745525786,
+                    "y": -0.00281211484684363,
+                    "z": 0.0685260968293052
+                  },
+                  "name": "LeftHandMiddle1"
+                },
+                "LeftHandMiddle2": {
+                  "rotation": {
+                    "x": 0.11847387848612233,
+                    "y": -4.5561128100366387e-7,
+                    "z": 2.576179043946417e-7
+                  },
+                  "name": "LeftHandMiddle2"
+                },
+                "LeftHandMiddle3": {
+                  "rotation": {
+                    "x": -0.2169159904694556,
+                    "y": -9.249631483908366e-9,
+                    "z": -5.778494124607306e-7
+                  },
+                  "name": "LeftHandMiddle3"
+                },
+                "LeftHandRing1": {
+                  "rotation": {
+                    "x": -0.06744321357698231,
+                    "y": 0.008583102834851548,
+                    "z": -0.1264202485956559
+                  },
+                  "name": "LeftHandRing1"
+                },
+                "LeftHandRing2": {
+                  "rotation": {
+                    "x": 0.026894386090352655,
+                    "y": -1.8031957403404284e-7,
+                    "z": 2.704145396992495e-9
+                  },
+                  "name": "LeftHandRing2"
+                },
+                "LeftHandRing3": {
+                  "rotation": {
+                    "x": 0.03296619697467945,
+                    "y": 1.8047385508033261e-7,
+                    "z": -2.6130791302984584e-7
+                  },
+                  "name": "LeftHandRing3"
+                },
+                "LeftHandPinky1": {
+                  "rotation": {
+                    "x": -0.11355084671249348,
+                    "y": 0.05488017562974545,
+                    "z": -0.44833988737434294
+                  },
+                  "name": "LeftHandPinky1"
+                },
+                "LeftHandPinky2": {
+                  "rotation": {
+                    "x": 0.10321019918514944,
+                    "y": -4.3788712850694125e-7,
+                    "z": 1.374454926163672e-7
+                  },
+                  "name": "LeftHandPinky2"
+                },
+                "LeftHandPinky3": {
+                  "rotation": {
+                    "x": -0.07667029210140314,
+                    "y": 2.1402660288417606e-7,
+                    "z": -4.845115213136168e-7
+                  },
+                  "name": "LeftHandPinky3"
+                },
+                "RightShoulder": {
+                  "rotation": {
+                    "x": 1.5524119516401407,
+                    "y": 0.3416906894647267,
+                    "z": 1.6267163347826228
+                  },
+                  "name": "RightShoulder"
+                },
+                "RightHand": {
+                  "rotation": {
+                    "x": 0.11133908646482149,
+                    "y": -0.07545095795046543,
+                    "z": 0.08236305038334207
+                  },
+                  "name": "RightHand"
+                },
+                "RightHandThumb1": {
+                  "rotation": {
+                    "x": 0.22483863897299616,
+                    "y": -0.15892185924260535,
+                    "z": -0.6053037981665875
+                  },
+                  "name": "RightHandThumb1"
+                },
+                "RightHandThumb2": {
+                  "rotation": {
+                    "x": 0.12814770799839129,
+                    "y": -8.220353491658218e-7,
+                    "z": 1.7655061205995596e-7
+                  },
+                  "name": "RightHandThumb2"
+                },
+                "RightHandThumb3": {
+                  "rotation": {
+                    "x": 0.07618404482980794,
+                    "y": 0.000002220305506665058,
+                    "z": 7.528312763671256e-8
+                  },
+                  "name": "RightHandThumb3"
+                },
+                "RightHandIndex1": {
+                  "rotation": {
+                    "x": 0.030307372420638943,
+                    "y": -0.00685350559201314,
+                    "z": -0.22232092177769378
+                  },
+                  "name": "RightHandIndex1"
+                },
+                "RightHandIndex2": {
+                  "rotation": {
+                    "x": 0.1327021090991975,
+                    "y": 0.0000019854790527398444,
+                    "z": 6.079912001890306e-7
+                  },
+                  "name": "RightHandIndex2"
+                },
+                "RightHandIndex3": {
+                  "rotation": {
+                    "x": -0.03918735409624972,
+                    "y": -3.1425271647975587e-7,
+                    "z": -5.768961081751827e-7
+                  },
+                  "name": "RightHandIndex3"
+                },
+                "RightHandMiddle1": {
+                  "rotation": {
+                    "x": -0.03735462053638009,
+                    "y": 0.002723907080493455,
+                    "z": -0.07274799865866181
+                  },
+                  "name": "RightHandMiddle1"
+                },
+                "RightHandMiddle2": {
+                  "rotation": {
+                    "x": 0.13838156235267035,
+                    "y": 0.0000010062213101660598,
+                    "z": -8.044976730128905e-8
+                  },
+                  "name": "RightHandMiddle2"
+                },
+                "RightHandMiddle3": {
+                  "rotation": {
+                    "x": -0.17350761159674916,
+                    "y": -0.0000015168393200979896,
+                    "z": -1.4440915141538173e-7
+                  },
+                  "name": "RightHandMiddle3"
+                },
+                "RightHandRing1": {
+                  "rotation": {
+                    "x": -0.07271008377812026,
+                    "y": -0.011706154388217791,
+                    "z": 0.15934387754063917
+                  },
+                  "name": "RightHandRing1"
+                },
+                "RightHandRing2": {
+                  "rotation": {
+                    "x": 0.053550261032808175,
+                    "y": -8.841498609693297e-8,
+                    "z": -7.159072733486426e-8
+                  },
+                  "name": "RightHandRing2"
+                },
+                "RightHandRing3": {
+                  "rotation": {
+                    "x": -0.01711816161601526,
+                    "y": 3.82188515906363e-8,
+                    "z": 2.5937442881785165e-7
+                  },
+                  "name": "RightHandRing3"
+                },
+                "RightHandPinky1": {
+                  "rotation": {
+                    "x": -0.11317280166907076,
+                    "y": -0.045450269167802024,
+                    "z": 0.38028702529689373
+                  },
+                  "name": "RightHandPinky1"
+                },
+                "RightHandPinky2": {
+                  "rotation": {
+                    "x": 0.11350345733127572,
+                    "y": 7.691316851143918e-8,
+                    "z": -2.734687047349824e-7
+                  },
+                  "name": "RightHandPinky2"
+                },
+                "RightHandPinky3": {
+                  "rotation": {
+                    "x": 0.016908082123398355,
+                    "y": -0.0000010887632721699017,
+                    "z": 4.7005177988265365e-8
+                  },
+                  "name": "RightHandPinky3"
+                },
+                "LeftUpLeg": {
+                  "rotation": {
+                    "x": 0.047230650546183105,
+                    "y": 0.00002620711233483892,
+                    "z": -3.1172435741639615
+                  },
+                  "name": "LeftUpLeg"
+                },
+                "LeftLeg": {
+                  "rotation": {
+                    "x": -0.01736569510281328,
+                    "y": -0.00025293959755749544,
+                    "z": 0.017078381866871602
+                  },
+                  "name": "LeftLeg"
+                },
+                "LeftFoot": {
+                  "rotation": {
+                    "x": 1.067721229757901,
+                    "y": -0.07016512948387613,
+                    "z": 0.12671474159056237
+                  },
+                  "name": "LeftFoot"
+                },
+                "LeftToeBase": {
+                  "rotation": {
+                    "x": 0.5200073709974368,
+                    "y": 0.002892057830255606,
+                    "z": -0.0016567652817744774
+                  },
+                  "name": "LeftToeBase"
+                },
+                "RightUpLeg": {
+                  "rotation": {
+                    "x": 0.04960592334122326,
+                    "y": -0.000023515263555947555,
+                    "z": 3.1172487802724076
+                  },
+                  "name": "RightUpLeg"
+                },
+                "RightLeg": {
+                  "rotation": {
+                    "x": -0.007243372042137771,
+                    "y": 0.00007848025095457116,
+                    "z": -0.017097704573574082
+                  },
+                  "name": "RightLeg"
+                },
+                "RightFoot": {
+                  "rotation": {
+                    "x": 1.0412096269867273,
+                    "y": 0.07693634809953682,
+                    "z": -0.13055725577955313
+                  },
+                  "name": "RightFoot"
+                },
+                "RightToeBase": {
+                  "rotation": {
+                    "x": 0.5384289100585553,
+                    "y": -0.009137703365718383,
+                    "z": 0.005457912382765096
+                  },
+                  "name": "RightToeBase"
+                }
+              },
+              "visible": true,
+              "displayName": "Adult-male 1"
+            }
+          },
+          "activeCamera": "6BC46A44-7965-43B5-B290-E3D2B9D15EEE"
+        }
+      }
+    },
+    {
+      "uid": "IFN3Z",
+      "url": "board-2-IFN3Z.png",
+      "newShot": false,
+      "lastEdited": 1610131809423,
+      "layers": {
+        "pencil": {
+          "url": "board-2-IFN3Z-pencil.png"
+        },
+        "shot-generator": {
+          "url": "board-2-IFN3Z-shot-generator.png",
+          "opacity": 0,
+          "thumbnail": "board-2-IFN3Z-shot-generator-thumbnail.jpg"
+        },
+        "reference": {
+          "url": "board-2-IFN3Z-reference.png",
+          "opacity": 0
+        },
+        "fill": {
+          "url": "board-2-IFN3Z-fill.png"
+        },
+        "tone": {
+          "url": "board-2-IFN3Z-tone.png"
+        },
+        "ink": {
+          "url": "board-2-IFN3Z-ink.png"
+        },
+        "notes": {
+          "url": "board-2-IFN3Z-notes.png"
+        }
+      },
+      "number": 2,
+      "shot": "2A",
+      "time": 2000,
+      "lineMileage": 4106.224409139429,
+      "sg": {
+        "version": "2.1.0",
+        "data": {
+          "world": {
+            "ground": true,
+            "backgroundColor": 15066597,
+            "room": {
+              "visible": false,
+              "width": 10,
+              "length": 10,
+              "height": 3
+            },
+            "environment": {
+              "x": 0,
+              "y": 0,
+              "z": 0,
+              "rotation": 0,
+              "scale": 1,
+              "visible": true,
+              "grayscale": true
+            },
+            "ambient": {
+              "intensity": 0.5
+            },
+            "directional": {
+              "intensity": 0.5,
+              "rotation": -0.9,
+              "tilt": 0.75
+            },
+            "fog": {
+              "visible": true,
+              "far": 40
+            },
+            "shadingMode": "Outline"
+          },
+          "sceneObjects": {
+            "6BC46A44-7965-43B5-B290-E3D2B9D15EEE": {
+              "id": "6BC46A44-7965-43B5-B290-E3D2B9D15EEE",
+              "type": "camera",
+              "fov": 22.25,
+              "x": 0,
+              "y": 6,
+              "z": 1,
+              "rotation": 0,
+              "tilt": 0,
+              "roll": 0,
+              "displayName": "Camera 1"
+            },
+            "DDD82F80-42BF-42C2-B319-E8B8CAC1879F": {
+              "id": "DDD82F80-42BF-42C2-B319-E8B8CAC1879F",
+              "type": "character",
+              "height": 1.8,
+              "model": "adult-male",
+              "x": -0.12797265211338474,
+              "y": 0.8762323919850632,
+              "z": 0,
+              "rotation": 0.024971087968238194,
+              "headScale": 1,
+              "tintColor": "#000000",
+              "morphTargets": {
+                "mesomorphic": 0,
+                "ectomorphic": 0,
+                "endomorphic": 0
+              },
+              "skeleton": {
+                "RightArm": {
+                  "rotation": {
+                    "x": 1.0610645508793712,
+                    "y": 0.1052704709149833,
+                    "z": 0.14064377487596336
+                  },
+                  "name": "RightArm"
+                },
+                "LeftArm": {
+                  "rotation": {
+                    "x": 0.5140755302845225,
+                    "y": 0.15323434038494552,
+                    "z": -0.20011338851212118
+                  },
+                  "name": "LeftArm"
+                },
+                "LeftForeArm": {
+                  "rotation": {
+                    "x": 0.1991206786116083,
+                    "y": -1.1989553937484643,
+                    "z": 1.7304258751430335
+                  },
+                  "name": "LeftForeArm"
+                },
+                "RightForeArm": {
+                  "rotation": {
+                    "x": 0.07870899424249701,
+                    "y": -0.19273426774535082,
+                    "z": -0.2695267423971035
+                  },
+                  "name": "RightForeArm"
+                },
+                "Hips": {
+                  "rotation": {
+                    "x": 1.9387823613214817e-7,
+                    "y": 1.2517479054362438e-16,
+                    "z": -1.0556516526023317e-23
+                  },
+                  "name": "Hips"
+                },
+                "Spine": {
+                  "rotation": {
+                    "x": -0.14498159102236952,
+                    "y": -1.610416912981466e-16,
+                    "z": -8.817751515035927e-15
+                  },
+                  "name": "Spine"
+                },
+                "Spine1": {
+                  "rotation": {
+                    "x": -1.4183282467000885e-7,
+                    "y": -3.705782693274748e-16,
+                    "z": -7.031714508502126e-14
+                  },
+                  "name": "Spine1"
+                },
+                "Spine2": {
+                  "rotation": {
+                    "x": 0.015413702725557778,
+                    "y": -2.004423404380613e-9,
+                    "z": -1.2886469292498015e-7
+                  },
+                  "name": "Spine2"
+                },
+                "Neck": {
+                  "rotation": {
+                    "x": 0.12956808038837359,
+                    "y": -3.314385933818848e-8,
+                    "z": 1.1253061869076828e-7
+                  },
+                  "name": "Neck"
+                },
+                "Head": {
+                  "rotation": {
+                    "x": -2.8088792694157785e-8,
+                    "y": 5.3903006453546536e-8,
+                    "z": 1.5489020389851573e-8
+                  },
+                  "name": "Head"
+                },
+                "LeftEye": {
+                  "rotation": {
+                    "x": 1.5685844264309015,
+                    "y": 0.0000033378677598696393,
+                    "z": 9.992306372543219e-14
+                  },
+                  "name": "LeftEye"
+                },
+                "RightEye": {
+                  "rotation": {
+                    "x": 1.5685844264309015,
+                    "y": 0.0000033378677598696393,
+                    "z": 9.992306372543219e-14
+                  },
+                  "name": "RightEye"
+                },
+                "LeftShoulder": {
+                  "rotation": {
+                    "x": 1.5529172171575085,
+                    "y": -0.3419423269070874,
+                    "z": -1.6250956663680223
+                  },
+                  "name": "LeftShoulder"
+                },
+                "LeftHand": {
+                  "rotation": {
+                    "x": -0.03402830663343903,
+                    "y": 0.07546620726445809,
+                    "z": -0.053577193551972865
+                  },
+                  "name": "LeftHand"
+                },
+                "LeftHandThumb1": {
+                  "rotation": {
+                    "x": 0.2052031569844975,
+                    "y": 0.15859724454011803,
+                    "z": 0.6491212219089899
+                  },
+                  "name": "LeftHandThumb1"
+                },
+                "LeftHandThumb2": {
+                  "rotation": {
+                    "x": 0.19247699066441015,
+                    "y": -0.000001129201199306088,
+                    "z": 1.3557413986795587e-7
+                  },
+                  "name": "LeftHandThumb2"
+                },
+                "LeftHandThumb3": {
+                  "rotation": {
+                    "x": -0.17245327134443275,
+                    "y": 0.0000025075078985789942,
+                    "z": 9.22443084099982e-7
+                  },
+                  "name": "LeftHandThumb3"
+                },
+                "LeftHandIndex1": {
+                  "rotation": {
+                    "x": 0.030225464783788205,
+                    "y": 0.006747517262886497,
+                    "z": 0.2196464345200666
+                  },
+                  "name": "LeftHandIndex1"
+                },
+                "LeftHandIndex2": {
+                  "rotation": {
+                    "x": 0.09948950075321661,
+                    "y": -2.6361429232659274e-7,
+                    "z": -6.943183071373417e-7
+                  },
+                  "name": "LeftHandIndex2"
+                },
+                "LeftHandIndex3": {
+                  "rotation": {
+                    "x": -0.09980937610791331,
+                    "y": 0.0000012914105938542217,
+                    "z": 6.562784695020921e-7
+                  },
+                  "name": "LeftHandIndex3"
+                },
+                "LeftHandMiddle1": {
+                  "rotation": {
+                    "x": -0.040930044745525786,
+                    "y": -0.00281211484684363,
+                    "z": 0.0685260968293052
+                  },
+                  "name": "LeftHandMiddle1"
+                },
+                "LeftHandMiddle2": {
+                  "rotation": {
+                    "x": 0.11847387848612233,
+                    "y": -4.5561128100366387e-7,
+                    "z": 2.576179043946417e-7
+                  },
+                  "name": "LeftHandMiddle2"
+                },
+                "LeftHandMiddle3": {
+                  "rotation": {
+                    "x": -0.2169159904694556,
+                    "y": -9.249631483908366e-9,
+                    "z": -5.778494124607306e-7
+                  },
+                  "name": "LeftHandMiddle3"
+                },
+                "LeftHandRing1": {
+                  "rotation": {
+                    "x": -0.06744321357698231,
+                    "y": 0.008583102834851548,
+                    "z": -0.1264202485956559
+                  },
+                  "name": "LeftHandRing1"
+                },
+                "LeftHandRing2": {
+                  "rotation": {
+                    "x": 0.026894386090352655,
+                    "y": -1.8031957403404284e-7,
+                    "z": 2.704145396992495e-9
+                  },
+                  "name": "LeftHandRing2"
+                },
+                "LeftHandRing3": {
+                  "rotation": {
+                    "x": 0.03296619697467945,
+                    "y": 1.8047385508033261e-7,
+                    "z": -2.6130791302984584e-7
+                  },
+                  "name": "LeftHandRing3"
+                },
+                "LeftHandPinky1": {
+                  "rotation": {
+                    "x": -0.11355084671249348,
+                    "y": 0.05488017562974545,
+                    "z": -0.44833988737434294
+                  },
+                  "name": "LeftHandPinky1"
+                },
+                "LeftHandPinky2": {
+                  "rotation": {
+                    "x": 0.10321019918514944,
+                    "y": -4.3788712850694125e-7,
+                    "z": 1.374454926163672e-7
+                  },
+                  "name": "LeftHandPinky2"
+                },
+                "LeftHandPinky3": {
+                  "rotation": {
+                    "x": -0.07667029210140314,
+                    "y": 2.1402660288417606e-7,
+                    "z": -4.845115213136168e-7
+                  },
+                  "name": "LeftHandPinky3"
+                },
+                "RightShoulder": {
+                  "rotation": {
+                    "x": 1.5524121141320453,
+                    "y": 0.34169067833146716,
+                    "z": 1.6267163297496035
+                  },
+                  "name": "RightShoulder"
+                },
+                "RightHand": {
+                  "rotation": {
+                    "x": -0.0357760105674482,
+                    "y": -0.08023498204198569,
+                    "z": 0.057179327041034185
+                  },
+                  "name": "RightHand"
+                },
+                "RightHandThumb1": {
+                  "rotation": {
+                    "x": 0.22483863897299616,
+                    "y": -0.15892185924260535,
+                    "z": -0.6053037981665875
+                  },
+                  "name": "RightHandThumb1"
+                },
+                "RightHandThumb2": {
+                  "rotation": {
+                    "x": 0.12814770799839129,
+                    "y": -8.220353491658218e-7,
+                    "z": 1.7655061205995596e-7
+                  },
+                  "name": "RightHandThumb2"
+                },
+                "RightHandThumb3": {
+                  "rotation": {
+                    "x": 0.07618404482980794,
+                    "y": 0.000002220305506665058,
+                    "z": 7.528312763671256e-8
+                  },
+                  "name": "RightHandThumb3"
+                },
+                "RightHandIndex1": {
+                  "rotation": {
+                    "x": 0.030307372420638943,
+                    "y": -0.00685350559201314,
+                    "z": -0.22232092177769378
+                  },
+                  "name": "RightHandIndex1"
+                },
+                "RightHandIndex2": {
+                  "rotation": {
+                    "x": 0.1327021090991975,
+                    "y": 0.0000019854790527398444,
+                    "z": 6.079912001890306e-7
+                  },
+                  "name": "RightHandIndex2"
+                },
+                "RightHandIndex3": {
+                  "rotation": {
+                    "x": -0.03918735409624972,
+                    "y": -3.1425271647975587e-7,
+                    "z": -5.768961081751827e-7
+                  },
+                  "name": "RightHandIndex3"
+                },
+                "RightHandMiddle1": {
+                  "rotation": {
+                    "x": -0.03735462053638009,
+                    "y": 0.002723907080493455,
+                    "z": -0.07274799865866181
+                  },
+                  "name": "RightHandMiddle1"
+                },
+                "RightHandMiddle2": {
+                  "rotation": {
+                    "x": 0.13838156235267035,
+                    "y": 0.0000010062213101660598,
+                    "z": -8.044976730128905e-8
+                  },
+                  "name": "RightHandMiddle2"
+                },
+                "RightHandMiddle3": {
+                  "rotation": {
+                    "x": -0.17350761159674916,
+                    "y": -0.0000015168393200979896,
+                    "z": -1.4440915141538173e-7
+                  },
+                  "name": "RightHandMiddle3"
+                },
+                "RightHandRing1": {
+                  "rotation": {
+                    "x": -0.07271008377812026,
+                    "y": -0.011706154388217791,
+                    "z": 0.15934387754063917
+                  },
+                  "name": "RightHandRing1"
+                },
+                "RightHandRing2": {
+                  "rotation": {
+                    "x": 0.053550261032808175,
+                    "y": -8.841498609693297e-8,
+                    "z": -7.159072733486426e-8
+                  },
+                  "name": "RightHandRing2"
+                },
+                "RightHandRing3": {
+                  "rotation": {
+                    "x": -0.01711816161601526,
+                    "y": 3.82188515906363e-8,
+                    "z": 2.5937442881785165e-7
+                  },
+                  "name": "RightHandRing3"
+                },
+                "RightHandPinky1": {
+                  "rotation": {
+                    "x": -0.11317280166907076,
+                    "y": -0.045450269167802024,
+                    "z": 0.38028702529689373
+                  },
+                  "name": "RightHandPinky1"
+                },
+                "RightHandPinky2": {
+                  "rotation": {
+                    "x": 0.11350345733127572,
+                    "y": 7.691316851143918e-8,
+                    "z": -2.734687047349824e-7
+                  },
+                  "name": "RightHandPinky2"
+                },
+                "RightHandPinky3": {
+                  "rotation": {
+                    "x": 0.016908082123398355,
+                    "y": -0.0000010887632721699017,
+                    "z": 4.7005177988265365e-8
+                  },
+                  "name": "RightHandPinky3"
+                },
+                "LeftUpLeg": {
+                  "rotation": {
+                    "x": 0.04381700156380697,
+                    "y": 0.00002617259948079853,
+                    "z": -3.1087746233969415
+                  },
+                  "name": "LeftUpLeg"
+                },
+                "LeftLeg": {
+                  "rotation": {
+                    "x": -0.024360304437381023,
+                    "y": -0.0002461979080761131,
+                    "z": -0.0002833800188508756
+                  },
+                  "name": "LeftLeg"
+                },
+                "LeftFoot": {
+                  "rotation": {
+                    "x": 1.0715763567024013,
+                    "y": -0.06225501819952736,
+                    "z": 0.13079608792194494
+                  },
+                  "name": "LeftFoot"
+                },
+                "LeftToeBase": {
+                  "rotation": {
+                    "x": 0.5200073709974368,
+                    "y": 0.002892057830255606,
+                    "z": -0.0016567652817744774
+                  },
+                  "name": "LeftToeBase"
+                },
+                "RightUpLeg": {
+                  "rotation": {
+                    "x": 0.04408311310887252,
+                    "y": -0.000023516635497145514,
+                    "z": 3.108805149038617
+                  },
+                  "name": "RightUpLeg"
+                },
+                "RightLeg": {
+                  "rotation": {
+                    "x": -0.018567139268735485,
+                    "y": 0.00007071982030147646,
+                    "z": 0.00021885392294781645
+                  },
+                  "name": "RightLeg"
+                },
+                "RightFoot": {
+                  "rotation": {
+                    "x": 1.0473263753520947,
+                    "y": 0.06915644802909893,
+                    "z": -0.1348455295326558
+                  },
+                  "name": "RightFoot"
+                },
+                "RightToeBase": {
+                  "rotation": {
+                    "x": 0.5384289100585553,
+                    "y": -0.009137703365718383,
+                    "z": 0.005457912382765096
+                  },
+                  "name": "RightToeBase"
+                }
+              },
+              "visible": true,
+              "displayName": "Adult-male 1",
+              "poleTargets": {
+                "leftArmPole": {
+                  "position": {
+                    "x": 0.940456003293645,
+                    "y": -0.09409997861925354,
+                    "z": -0.4597318242979227
+                  },
+                  "currentCharacterHeight": 1.8958303863182664
+                }
+              }
+            }
+          },
+          "activeCamera": "6BC46A44-7965-43B5-B290-E3D2B9D15EEE"
+        }
+      },
+      "audio": null,
+      "dialogue": "",
+      "action": "",
+      "notes": ""
+    },
+    {
+      "uid": "ZCKAZ",
+      "url": "board-2-ZCKAZ.png",
+      "newShot": false,
+      "lastEdited": 1610131261166,
+      "layers": {
+        "pencil": {
+          "url": "board-2-ZCKAZ-pencil.png"
+        },
+        "shot-generator": {
+          "url": "board-2-ZCKAZ-shot-generator.png",
+          "opacity": 0.75
+        },
+        "reference": {
+          "url": "board-2-ZCKAZ-reference.png",
+          "opacity": 0.75
+        },
+        "fill": {
+          "url": "board-2-ZCKAZ-fill.png"
+        },
+        "tone": {
+          "url": "board-2-ZCKAZ-tone.png"
+        },
+        "ink": {
+          "url": "board-2-ZCKAZ-ink.png"
+        },
+        "notes": {
+          "url": "board-2-ZCKAZ-notes.png"
+        }
+      },
+      "number": 3,
+      "shot": "3A",
+      "time": 4000,
+      "lineMileage": 12441.161044091068,
+      "audio": null,
+      "dialogue": "PERSON A: Hello!",
+      "action": "Waving",
+      "notes": "Frantic waving.",
+      "duration": "2000"
+    }
+  ]
+}

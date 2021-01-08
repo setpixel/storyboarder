@@ -1,0 +1,105 @@
+{
+  "version": "2.1.0",
+  "aspectRatio": "1.7777777777777777",
+  "fps": 24,
+  "defaultBoardTiming": 2000,
+  "boards": [
+    {
+      "uid": "6TXV5",
+      "url": "board-1-6TXV5.png",
+      "newShot": false,
+      "lastEdited": 1610131447438,
+      "layers": {
+        "notes": {
+          "url": "board-1-6TXV5-notes.png"
+        },
+        "pencil": {
+          "url": "board-1-6TXV5-pencil.png"
+        }
+      },
+      "number": 1,
+      "shot": "1A",
+      "time": 0,
+      "lineMileage": 2147.486279108791
+    },
+    {
+      "uid": "MOHV1",
+      "url": "board-2-MOHV1.png",
+      "newShot": false,
+      "lastEdited": 1610131474340,
+      "layers": {
+        "notes": {
+          "url": "board-2-MOHV1-notes.png"
+        },
+        "pencil": {
+          "url": "board-2-MOHV1-pencil.png"
+        },
+        "shot-generator": {
+          "url": "board-2-MOHV1-shot-generator.png",
+          "opacity": 0.75
+        },
+        "reference": {
+          "url": "board-2-MOHV1-reference.png",
+          "opacity": 0.75
+        },
+        "fill": {
+          "url": "board-2-MOHV1-fill.png"
+        },
+        "tone": {
+          "url": "board-2-MOHV1-tone.png"
+        },
+        "ink": {
+          "url": "board-2-MOHV1-ink.png"
+        }
+      },
+      "number": 2,
+      "shot": "2A",
+      "time": 2000,
+      "lineMileage": 3926.145333976366,
+      "audio": null,
+      "dialogue": "",
+      "action": "",
+      "notes": ""
+    },
+    {
+      "uid": "TDIC0",
+      "url": "board-3-TDIC0.png",
+      "newShot": false,
+      "lastEdited": 1610131514805,
+      "layers": {
+        "notes": {
+          "url": "board-3-TDIC0-notes.png"
+        },
+        "pencil": {
+          "url": "board-3-TDIC0-pencil.png"
+        },
+        "shot-generator": {
+          "url": "board-3-TDIC0-shot-generator.png",
+          "opacity": 0.75
+        },
+        "reference": {
+          "url": "board-3-TDIC0-reference.png",
+          "opacity": 0.75
+        },
+        "fill": {
+          "url": "board-3-TDIC0-fill.png"
+        },
+        "tone": {
+          "url": "board-3-TDIC0-tone.png"
+        },
+        "ink": {
+          "url": "board-3-TDIC0-ink.png"
+        }
+      },
+      "number": 3,
+      "shot": "3A",
+      "time": 4000,
+      "lineMileage": 4528.145275830267,
+      "audio": null,
+      "dialogue": "PERSON B: Hi!",
+      "action": "Waving back to say hi.",
+      "notes": "The background should be very dark because this person lives in a cave.",
+      "duration": "1300"
+    }
+  ]
+}
