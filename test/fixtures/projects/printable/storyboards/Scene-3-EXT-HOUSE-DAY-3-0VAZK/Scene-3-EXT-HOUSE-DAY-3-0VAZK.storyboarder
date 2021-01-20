@@ -73,7 +73,7 @@
         }
       },
       "number": 2,
-      "shot": "2A",
+      "shot": "1B",
       "time": 1500,
       "lineMileage": 13266.195382028869,
       "duration": "1500",
@@ -113,7 +113,7 @@
         }
       },
       "number": 3,
-      "shot": "3A",
+      "shot": "1C",
       "time": 3000,
       "lineMileage": 7453.548732588974,
       "duration": "1500",
@@ -125,7 +125,7 @@
     {
       "uid": "EOQXI",
       "url": "board-4-EOQXI.png",
-      "newShot": false,
+      "newShot": true,
       "lastEdited": 1610131745620,
       "layers": {
         "pencil": {
@@ -133,7 +133,7 @@
         }
       },
       "number": 4,
-      "shot": "4A",
+      "shot": "2A",
       "time": 4500,
       "lineMileage": 1162.5813570588068
     }
