@@ -7282,6 +7282,15 @@ ipcRenderer.on('storyboarder:get-state', event => {
   )
 })
 
+ipcRenderer.on('exportPDF:getProjectData-request', (event, ...args) => {
+  event.sender.send('exportPDF:getProjectData-response', {
+    scriptData,
+    currentScene,
+    currentStoryboarderFilePath: boardFilename,
+    currentBoardData: boardData
+  })
+})
+
 const logToView = opt => ipcRenderer.send('log', opt)
 
 if (prefsModule.getPrefs().enableDiagnostics) {

@@ -32,6 +32,7 @@ const MobileServer = require('./express-app/app')
 const preferencesUI = require('./windows/preferences')()
 const registration = require('./windows/registration/main')
 const shotGeneratorWindow = require('./windows/shot-generator/main')
+const printProject = require('./windows/print-project/main')
 
 const JWT = require('jsonwebtoken')
 
@@ -1548,8 +1549,29 @@ ipcMain.on('openLanguagePreferences', (event) => {
 })
 
 
-ipcMain.on('exportPrintablePdf', (event, sourcePath, fileName) => {
-  mainWindow.webContents.send('exportPrintablePdf', sourcePath, fileName)
+
+// PDF Export
+ipcMain.on('exportPDF', () => {
+  if (!mainWindow) return
+
+  printProject.show({ parent: mainWindow })
+  analytics.event('Board', 'show print window')
+})
+ipcMain.handle('exportPDF:getData', async () => {
+  if (!mainWindow) return
+
+  return await new Promise(resolve => {
+    ipcMain.once('exportPDF:getProjectData-response', (event, projectData) => {
+      resolve({
+        currentFilePath: currentFile,
+        projectData
+      })
+    })
+    console.log('sending exportPDF:getProjectData-request')
+    mainWindow.webContents.send('exportPDF:getProjectData-request')
+  })
+})
+
 })
 
 ipcMain.on('toggleAudition', (event) => {

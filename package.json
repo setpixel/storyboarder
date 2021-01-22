@@ -200,6 +200,7 @@
     "flatten-vertex-data": "^1.0.2",
     "fraction.js": "4.0.3",
     "fs-extra": "7.0.1",
+    "get-stream": "6.0.0",
     "gifencoder": "^1.1.0",
     "gl-vec2": "^1.0.0",
     "i18next": "^19.5.4",
