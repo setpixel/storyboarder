@@ -4,6 +4,8 @@ const { shell, ipcRenderer } = require('electron')
 
 const pdfjsLib = require('pdfjs-dist')
 
+// const { Rect } = require('@thi.ng/geom')
+// const v = require('@thi.ng/vectors')
 const debounce = require('lodash.debounce')
 const moment = require('moment')
 
@@ -20,21 +22,26 @@ const fit = ([wi, hi], [ws, hs]) =>
     ? [wi * hs / hi, hs]
     : [ws, hi * ws / wi]
 
+const px = n => `${n}px`
+
 const defaultCfg = {
   pageSize: [841.89, 595.28],
   gridDim: [3, 2],
   pageToPreview: 1
 }
 const run = async () => {
-  let preview
+  // state
   let rendering
+  let exporting
+  let project
+  let userCfg
 
   let canvas = document.createElement('canvas')
   document.querySelector('.output .inner').appendChild(canvas)
 
-  let project = await getProjectData(await getData())
+  project = await getProjectData(await getData())
 
-  let userCfg = JSON.parse(JSON.stringify(defaultCfg))
+  userCfg = JSON.parse(JSON.stringify(defaultCfg))
   document.querySelector('.input div[contenteditable]').innerText =
     JSON.stringify(userCfg, null, 2)
 
@@ -46,7 +53,8 @@ const run = async () => {
       console.error('could not parse input')
     }
     if (newUserCfg) {
-      await update(newUserCfg)
+      userCfg = newUserCfg
+      await update()
     }
   }
   document.querySelector('.input div[contenteditable]')
@@ -72,12 +80,32 @@ const run = async () => {
       exportToFile()
     })
 
-  const exportToFile = () => {
+  const exportToFile = async () => {
+    if (exporting) return
+
+    let filename = getExportFilename(project, new Date())
+    let filepath = path.join(project.root, 'exports', filename)
+    fs.mkdirp(path.dirname(filepath))
+
+    exporting = true
+    try {
+      let cfg = {
+        ...defaultCfg,
+        ...userCfg
+      }
+      let data = await generate(project, cfg)
+
+      fs.writeFileSync(filepath, data, { encoding: 'binary' })
+      console.log('Exported to ' + filepath)
+      shell.showItemInFolder(filepath)
+    } catch (err) {
+      console.error(err)
+    } finally {
+      exporting = false
+    }
   }
 
-  const px = n => `${n}px`
-
-  const _update = async (userCfg) => {
+  const _update = async () => {
     if (rendering) return
 
     let cfg = {
@@ -123,7 +151,7 @@ const run = async () => {
 
   let update = debounce(_update, 500)
 
-  update(userCfg)
+  update()
 }
 
 run()
