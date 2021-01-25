@@ -1,14 +1,10 @@
+const path = require('path')
 const PDFDocument = require('pdfkit')
 const groupByPage = require('./group-by-page')
 const toPdfJs = require('./to-pdf-js')
 
 const v = require('@thi.ng/vectors')
 const { Rect } = require('@thi.ng/geom')
-
-const fonts = {
-  regular: 'Helvetica',
-  bold: 'Helvetica-Bold'
-}
 
 const inset = (rect, depth) =>
   new Rect(
@@ -17,6 +13,8 @@ const inset = (rect, depth) =>
     rect.attribs
   )
 
+const REGULAR = path.join(__dirname, '..', '..', '..', 'fonts', 'thicccboi', 'THICCCBOI-Regular.woff2')
+const BOLD = path.join(__dirname, '..', '..', '..', 'fonts', 'thicccboi', 'THICCCBOI-Bold.woff2')
 async function generate (project, cfg) {
   const { pageSize, gridDim } = cfg
 
@@ -24,6 +22,8 @@ async function generate (project, cfg) {
     autoFirstPage: false,
     size: cfg.pageSize
   })
+  doc.registerFont(REGULAR, REGULAR)
+  doc.registerFont(BOLD, BOLD)
 
   let pages = groupByPage(project.scenes, gridDim[0] * gridDim[1])
 
@@ -82,16 +82,16 @@ async function generate (project, cfg) {
       doc
         .fillColor('black')
         .fontSize(16)
-        .font(fonts.regular)
+        .font(REGULAR)
         .moveDown(1)
         .text(project.title + ' / ', { continued: true, baseline: 'bottom' })
     }
     doc
       .fontSize(16)
-      .font(fonts.bold)
+      .font(BOLD)
       .text(pageData.scene.title, { baseline: 'bottom' })
 
-    doc.font(fonts.regular)
+    doc.font(REGULAR)
     doc.text(`page: ${pageData.index + 1}`)
     doc.restore()
 
