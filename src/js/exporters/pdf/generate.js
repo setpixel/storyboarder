@@ -1,7 +1,6 @@
 const path = require('path')
 const PDFDocument = require('pdfkit')
 const groupByPage = require('./group-by-page')
-const toPdfJs = require('./to-pdf-js')
 
 const v = require('@thi.ng/vectors')
 const { Rect } = require('@thi.ng/geom')
@@ -22,6 +21,7 @@ async function generate (project, cfg) {
     autoFirstPage: false,
     size: cfg.pageSize
   })
+  doc.pipe(stream)
   doc.registerFont(REGULAR, REGULAR)
   doc.registerFont(BOLD, BOLD)
 
@@ -129,7 +129,6 @@ async function generate (project, cfg) {
   }
 
   doc.end()
-  return await toPdfJs(doc)
 }
 
 module.exports = generate

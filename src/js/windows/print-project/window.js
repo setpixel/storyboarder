@@ -1,4 +1,5 @@
 const fs = require('fs-extra')
+const os = require('os')
 const path = require('path')
 const { shell, ipcRenderer } = require('electron')
 
@@ -115,10 +116,14 @@ const run = async () => {
 
     rendering = true
     try {
-      let data = await generate(project, cfg)
+      let directory = await fs.mkdtemp(path.join(os.tmpdir(), 'storyboarder-'))
+      let filepath = path.join(directory, 'export.pdf')
+      console.log('writing to', filepath)
+      let stream = fs.createWriteStream(filepath)
+      let data = await generate(project, cfg, stream)
       rendering = false
 
-      let task = pdfjsLib.getDocument({ data })
+      let task = pdfjsLib.getDocument(filepath)
       let pdf = await task.promise
       let page = await pdf.getPage(cfg.pageToPreview)
 
