@@ -33,14 +33,14 @@ async function generate (stream, { project }, cfg) {
   let end = cfg.pages[1] + 1
   for (let pageData of pages.slice(start, end)) {
     doc.addPage({
-      margin: 20,
+      margins: { top: 30, right: 30, bottom: 30, left: 30 },
       size: cfg.pageSize
     })
 
     let pg = new Rect(
       [
         doc.page.margins.left,
-        doc.page.margins.right
+        doc.page.margins.top
       ],
       [
         doc.page.width - doc.page.margins.left - doc.page.margins.right,
