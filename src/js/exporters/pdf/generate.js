@@ -1,9 +1,10 @@
 const path = require('path')
 const PDFDocument = require('pdfkit')
-const groupByPage = require('./group-by-page')
-
 const v = require('@thi.ng/vectors')
 const { Rect } = require('@thi.ng/geom')
+
+const groupByPage = require('./group-by-page')
+
 
 const inset = (rect, depth) =>
   new Rect(
