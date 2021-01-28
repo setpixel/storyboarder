@@ -15,6 +15,7 @@ const inset = (rect, depth) =>
 const REGULAR = path.join(__dirname, '..', '..', '..', 'fonts', 'thicccboi', 'THICCCBOI-Regular.woff2')
 const BOLD = path.join(__dirname, '..', '..', '..', 'fonts', 'thicccboi', 'THICCCBOI-Bold.woff2')
 async function generate (project, cfg) {
+async function generate (stream, { project }, cfg) {
   const { pageSize, gridDim } = cfg
 
   let doc = new PDFDocument({
@@ -27,7 +28,9 @@ async function generate (project, cfg) {
 
   let pages = groupByPage(project.scenes, gridDim[0] * gridDim[1])
 
-  for (let pageData of pages) {
+  let start = cfg.pages[0]
+  let end = cfg.pages[1] + 1
+  for (let pageData of pages.slice(start, end)) {
     doc.addPage({
       margin: 20,
       size: cfg.pageSize

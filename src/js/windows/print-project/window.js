@@ -28,8 +28,33 @@ const px = n => `${n}px`
 const defaultCfg = {
   pageSize: [841.89, 595.28],
   gridDim: [3, 2],
-  pageToPreview: 1
+  pages: [0, 0],
+  pageToPreview: 0
 }
+// memoize tmp filepath
+const createGetTempFilepath = function () {
+  let filepath
+  return function () {
+    if (filepath) {
+      return filepath
+    } else {
+      let directory = fs.mkdtempSync(path.join(os.tmpdir(), 'storyboarder-'))
+      filepath = path.join(directory, 'export.pdf')
+      console.log('writing to', filepath)
+      return filepath
+    }
+  }
+}
+const getTempFilepath = createGetTempFilepath()
+
+const getExportFilename = (project, date) => {
+  let base = project.scenes.length > 1
+    ? path.parse(project.scriptFilepath).name
+    : path.parse(project.scenes[0].storyboarderFilePath).name
+  let datestamp = moment(date).format('YYYY-MM-DD hh.mm.ss')
+  return filename = `${base} ${datestamp}.pdf`
+}
+
 const run = async () => {
   // state
   let rendering
@@ -40,40 +65,34 @@ const run = async () => {
   let canvas = document.createElement('canvas')
   document.querySelector('.output .inner').appendChild(canvas)
 
+  let inputEl = document.querySelector('.input div[contenteditable]')
+
   project = await getProjectData(await getData())
 
   userCfg = JSON.parse(JSON.stringify(defaultCfg))
-  document.querySelector('.input div[contenteditable]').innerText =
-    JSON.stringify(userCfg, null, 2)
+  inputEl.innerText = JSON.stringify(userCfg, null, 2)
 
   const onInput = async () => {
-    let newUserCfg
+    let curr
+    let value = inputEl.innerText
+
     try {
-       newUserCfg = JSON.parse(document.querySelector('.input div[contenteditable]').innerText)
+      curr = JSON.parse(value)
     } catch (err) {
       console.error('could not parse input')
+      return
     }
-    if (newUserCfg) {
-      userCfg = newUserCfg
-      await update()
-    }
+
+    userCfg = curr
+    await update()
   }
-  document.querySelector('.input div[contenteditable]')
-    .addEventListener('input', onInput)
+  inputEl.addEventListener('input', onInput)
 
   document.addEventListener('keydown', event => {
     if (event.key == 'Escape') {
       window.close()
     }
   })
-
-  const getExportFilename = (project, date) => {
-    let base = project.scenes.length > 1
-      ? path.parse(project.scriptFilepath).name
-      : path.parse(project.scenes[0].storyboarderFilePath).name
-    let datestamp = moment(date).format('YYYY-MM-DD hh.mm.ss')
-    return filename = `${base} ${datestamp}.pdf`
-  }
 
   document.querySelector('[data-action="export"]')
     .addEventListener('click', event => {
@@ -90,13 +109,14 @@ const run = async () => {
 
     exporting = true
     try {
+      let stream = fs.createWriteStream(filepath)
+
       let cfg = {
         ...defaultCfg,
         ...userCfg
       }
-      let data = await generate(project, cfg)
+      await generate(stream, { project }, cfg)
 
-      fs.writeFileSync(filepath, data, { encoding: 'binary' })
       console.log('Exported to ' + filepath)
       shell.showItemInFolder(filepath)
     } catch (err) {
@@ -111,21 +131,20 @@ const run = async () => {
 
     let cfg = {
       ...defaultCfg,
-      ...userCfg
+      ...userCfg,
+      pages: [userCfg.pageToPreview, userCfg.pageToPreview]
     }
 
     rendering = true
     try {
-      let directory = await fs.mkdtemp(path.join(os.tmpdir(), 'storyboarder-'))
-      let filepath = path.join(directory, 'export.pdf')
-      console.log('writing to', filepath)
-      let stream = fs.createWriteStream(filepath)
-      let data = await generate(project, cfg, stream)
+      let outfile = getTempFilepath()
+      let stream = fs.createWriteStream(outfile)
+      await generate(stream, { project }, cfg)
       rendering = false
 
-      let task = pdfjsLib.getDocument(filepath)
+      let task = pdfjsLib.getDocument(outfile)
       let pdf = await task.promise
-      let page = await pdf.getPage(cfg.pageToPreview)
+      let page = await pdf.getPage(1)
 
       let available = canvas.parentNode.getBoundingClientRect()
       let full = page.getViewport({ scale: 1 })
