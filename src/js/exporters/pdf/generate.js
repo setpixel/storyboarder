@@ -138,7 +138,135 @@ const drawHeader = (doc, { rect, projectTitle, pageData, pagination, stats }, cf
   doc.restore()
 }
 
-const drawBoard = (doc, { rect, scene, board, imagesPath }, cfg) => {
+const drawBoard = (doc, { direction, ...options }, cfg) =>
+  direction == 'column'
+  ? drawBoardColumn(doc, options, cfg)
+  : direction == 'row'
+  ? drawBoardRow(doc, options, cfg)
+  : null
+
+const drawBoardRow = (doc, { rect, scene, board, imagesPath }, cfg) => {
+  let inner = rect.copy()
+  v.sub2(null, inner.size, [10, 0])
+
+  let imageR = inset(inner, [5, 5])
+  imageR.size = fit(
+    boardFileImageSize(scene),
+    imageR.size
+  )
+
+  let cellA = inner.copy()
+  cellA.size[0] = (cellA.size[0] * 0.1) - 1
+
+  imageR.pos[0] += cellA.size[0] + 1
+
+  let imageB = inset(imageR, [-5, -5])
+
+  let cellB = inner.copy()
+  cellB.pos[0] = imageR.pos[0] + imageR.size[0] + 1 + 5
+  cellB.size[0] -= cellA.size[0] + 1 + imageR.size[0] + 1 + 10
+
+  let cellAinner = inset(cellA, [5, 5])
+  let cellBinner = inset(cellB, [5, 5])
+
+  doc
+    .rect(...imageB.pos, ...imageB.size)
+    .fillColor('black')
+    .fill()
+  doc
+    .rect(...imageR.pos, ...imageR.size)
+    .fillColor('blue')
+    .fill()
+
+  //
+  //
+  // image
+  //
+  doc.image(
+    path.join(imagesPath, boardFilenameForPosterFrame(board)),
+    ...imageR.pos,
+    { fit: imageR.size }
+  )
+
+  //
+  //
+  // new shot marker
+  //
+  if (board.newShot) {
+    let marker = inner.copy()
+    // width
+    marker.size[0] = 3
+    marker.pos[0] -= 3 // offset
+    doc
+      .rect(...marker.pos, ...marker.size)
+      .fillColor('black')
+      .strokeColor('black')
+      .lineWidth(1)
+      .fillAndStroke()
+  }
+
+  //
+  //
+  // borders
+  //
+  doc
+    .strokeColor('#333')
+    .strokeOpacity(1)
+    .lineWidth(1)
+    .rect(...inner.pos, ...inner.size)
+    .stroke()
+  //
+  //
+  // shot number
+  //
+  doc
+    .fontSize(10)
+    .fillColor('black')
+    .text(board.shot, ...cellAinner.pos)
+
+  //
+  //
+  // board text
+  //
+  let entries = [
+    { text: board.dialogue },
+    { text: board.action },
+    { text: board.notes },
+    { text: durationMsecsToString(boardDuration(scene, board)) }
+  ]
+  for (let e = 0; e < entries.length; e++) {
+    let textR = cellBinner.copy()
+    textR.size[0] *= 1 / entries.length
+    textR.pos[0] += textR.size[0] * e
+    textR.size[0] -= 5
+
+    let entry = entries[e]
+    if (entry.text) {
+    doc
+      .save()
+      .rect(...textR.pos, ...textR.size)
+      .clip()
+        .fontSize(10)
+        .fillColor('black')
+        .text(
+          entry.text,
+          ...textR.pos,
+          {
+            align: e == 0
+              ? 'left'
+              : e == entries.length - 1
+              ? 'right'
+              : 'center',
+            width: textR.size[0],
+            height: textR.size[1]
+          }
+        )
+      .restore()
+    }
+  }
+}
+
+const drawBoardColumn = (doc, { rect, scene, board, imagesPath }, cfg) => {
   let inner = rect.copy()
   v.sub2(null, inner.size, [10, 10])
 
@@ -290,7 +418,7 @@ const drawFooter = (doc, { rect }, cfg) => {
     .restore()
 }
 async function generate (stream, { project }, cfg) {
-  const { pageSize, gridDim } = cfg
+  const { pageSize, gridDim, direction } = cfg
 
   let doc = new PDFDocument({
     autoFirstPage: false,
@@ -368,11 +496,17 @@ async function generate (stream, { project }, cfg) {
       v.copy(grid.pos),
       v.div2([], grid.size, gridDim)
     )
-
     for (let n = 0; n < pageData.boards.length; n++) {
       let board = pageData.boards[n]
-      let i = n % gridDim[0]
-      let j = Math.floor(n / gridDim[0])
+
+      let i, j
+      if (direction == 'row') {
+        i = Math.floor(n / gridDim[1])
+        j = n % gridDim[1]
+      } else if (direction == 'column') {
+        i = n % gridDim[0]
+        j = Math.floor(n / gridDim[0])
+      }
 
       let cell = template.copy()
       v.add2(null, cell.pos, v.mul2([], cell.size, [i, j]))
@@ -383,7 +517,8 @@ async function generate (stream, { project }, cfg) {
           rect: cell,
           board,
           scene: pageData.scene.data,
-          imagesPath
+          imagesPath,
+          direction
         },
         cfg
       )
