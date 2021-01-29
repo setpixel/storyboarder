@@ -436,7 +436,7 @@ async function generate (stream, { project }, cfg) {
     const imagesPath = path.join(path.dirname(pageData.scene.storyboarderFilePath), 'images')
 
     doc.addPage({
-      margins: { top: 30, right: 30, bottom: 30, left: 30 },
+      margins: { top: 36, right: 36, bottom: 36, left: 36 },
       size: cfg.pageSize
     })
 
