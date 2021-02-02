@@ -43,6 +43,10 @@ h1 {
   background: rgb(229, 229, 229);
   color: rgba(0, 0, 0, 0.6);
 }
+.title {
+  font-size: 2rem;
+  color: rgb(92, 92, 92);
+}
 div[contenteditable] {
   font-family: monospace;
   font-size: 12px;
