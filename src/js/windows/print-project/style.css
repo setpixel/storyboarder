@@ -11,7 +11,7 @@ body {
   line-height: 1.2;
 }
 h1 {
-  margin: 0;
+  margin: 1.5rem 0 2rem;
   padding: 0;
 }
 .container {
@@ -24,22 +24,32 @@ h1 {
   height: 2rem;
   font-size: 2rem;
   line-height: 1;
-  background-color: #333;
+
   display: flex;
   place-content: center;
   text-decoration: none;
-  color: white;
+
+  opacity: 0.5;
+  color: rgba(0, 0, 0, 0.6);
+  cursor: default;
+
+  margin-top: -0.5rem;
+  margin-left: -0.5rem;
+  margin-bottom: -0.5rem;
 }
 .editor {
   display: flex;
   flex: 1;
+  background: rgb(229, 229, 229);
+  color: rgba(0, 0, 0, 0.6);
 }
 div[contenteditable] {
   font-family: monospace;
   font-size: 12px;
   white-space: pre;
   padding: 0.5rem;
-  background: #222;
+  background: rgba(0, 0, 0, 0.075);
+  color: rgba(0, 0, 0, 0.7);
   outline: none;
   flex: 1;
 }
@@ -55,6 +65,8 @@ div[contenteditable] {
   flex: 1;
   padding: 1rem;
   display: flex;
+  background: url(../../../img/wood-texture.png) no-repeat center center fixed;
+  background-size: cover;
 }
 .output .inner {
   flex: 1;
@@ -64,13 +76,13 @@ div[contenteditable] {
   overflow: hidden;
 }
 button {
-  width: 33%;
-  padding: 0.5rem;
+  align-self: flex-start;
+  padding: 1rem 1.5rem;
   border: none;
   cursor: pointer;
   outline: none;
   border-radius: 0.5rem;
-  background-color: black;
-  color: grey;
-  margin: 1rem;
+  background-color: rgba(0, 0, 0, 0.1);
+  color: rgba(0, 0, 0, 0.6);
+  margin: 1rem 0;
 }
