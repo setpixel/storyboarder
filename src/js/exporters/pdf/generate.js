@@ -436,8 +436,6 @@ async function generate (stream, { project }, cfg) {
     boardTimeDisplay
   } = cfg
 
-  console.log(cfg)
-
   let doc = new PDFDocument({
     autoFirstPage: false,
     size: cfg.paperSize
