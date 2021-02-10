@@ -219,20 +219,23 @@ const drawBoardRow = (doc, { rect, scene, board, imagesPath }, cfg) => {
   //
   // shot number
   //
-  doc
-    .fontSize(10)
-    .fillColor('black')
-    .text(board.shot, ...cellAinner.pos)
+  if (cfg.enableShotNumber) {
+    doc
+      .fontSize(10)
+      .fillColor('black')
+      .text(board.shot, ...cellAinner.pos)
+  }
 
   //
   //
   // board text
   //
   let entries = [
-    { text: board.dialogue },
-    { text: board.action },
-    { text: board.notes },
-    { text: durationMsecsToString(boardDuration(scene, board)) }
+    { text: cfg.enableDialogue ? board.dialogue : undefined },
+    { text: cfg.enableAction ? board.action : undefined },
+    { text: cfg.enabledNotes ? board.notes : undefined },
+    // TODO handle sceneTime, scriptTime
+    { text: cfg.boardTimeDisplay == 'duration' && durationMsecsToString(boardDuration(scene, board)) }
   ]
   for (let e = 0; e < entries.length; e++) {
     let textR = cellBinner.copy()
@@ -328,20 +331,24 @@ const drawBoardColumn = (doc, { rect, scene, board, imagesPath }, cfg) => {
   // upper
   //
   let middle = [upperR.pos[0], upperR.pos[1] + upperR.size[1] * 0.5]
-  doc
-    .fontSize(10)
-    .fillColor('black')
-    .text(board.shot, ...middle, {
-      baseline: 'middle'
-    })
-  doc
-    .fontSize(10)
-    .fillColor('black')
-    .text(durationMsecsToString(boardDuration(scene, board)), ...middle, {
-      width: upperR.size[0],
-      align: 'right',
-      baseline: 'middle'
-    })
+  if (cfg.enableShotNumber) {
+    doc
+      .fontSize(10)
+      .fillColor('black')
+      .text(board.shot, ...middle, {
+        baseline: 'middle'
+      })
+  }
+  if (cfg.boardTimeDisplay == 'duration') {
+    doc
+      .fontSize(10)
+      .fillColor('black')
+      .text(durationMsecsToString(boardDuration(scene, board)), ...middle, {
+        width: upperR.size[0],
+        align: 'right',
+        baseline: 'middle'
+      })
+  }
 
   //
   //
@@ -352,9 +359,9 @@ const drawBoardColumn = (doc, { rect, scene, board, imagesPath }, cfg) => {
     .rect(...lowerR.pos, ...lowerR.size)
     .clip()
   let entries = [
-    board.dialogue && { text: board.dialogue },
-    board.action && { text: board.action },
-    board.notes && { text: board.notes }
+    cfg.enableDialogue && board.dialogue && { text: board.dialogue },
+    cfg.enableAction && board.action && { text: board.action },
+    cfg.enableNotes && board.notes && { text: board.notes }
   ].filter(Boolean)
   for (let e = 0; e < entries.length; e++) {
     let entry = entries[e]
@@ -418,11 +425,22 @@ const drawFooter = (doc, { rect }, cfg) => {
     .restore()
 }
 async function generate (stream, { project }, cfg) {
-  const { pageSize, gridDim, direction } = cfg
+  const {
+    paperSize,
+    gridDim,
+    direction,
+    enableDialogue,
+    enableAction,
+    enableNotes,
+    enableShotNumber,
+    boardTimeDisplay
+  } = cfg
+
+  console.log(cfg)
 
   let doc = new PDFDocument({
     autoFirstPage: false,
-    size: cfg.pageSize
+    size: cfg.paperSize
   })
   doc.pipe(stream)
   doc.registerFont(REGULAR, REGULAR)
@@ -432,6 +450,7 @@ async function generate (stream, { project }, cfg) {
 
   let start = cfg.pages[0]
   let end = cfg.pages[1] + 1
+
   for (let pageData of pages.slice(start, end)) {
     const imagesPath = path.join(path.dirname(pageData.scene.storyboarderFilePath), 'images')
 

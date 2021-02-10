@@ -10,10 +10,7 @@ body {
   font-family: var(--default-font-stack);
   line-height: 1.2;
 }
-h1 {
-  margin: 1.5rem 0 2rem;
-  padding: 0;
-}
+
 .container {
   width: 100%;
   height: 100%;
@@ -44,25 +41,31 @@ h1 {
   color: rgba(0, 0, 0, 0.6);
 }
 .title {
+  margin: 1.5rem 0 2rem;
+  padding: 0;
+  color: rgba(0, 0, 0, 0.8);
   font-size: 2rem;
-  color: rgb(92, 92, 92);
 }
-div[contenteditable] {
-  font-family: monospace;
-  font-size: 12px;
-  white-space: pre;
-  padding: 0.5rem;
-  background: rgba(0, 0, 0, 0.075);
+.title + p {
+  font-size: 0.9375rem;
+  margin: -1.5rem 0 1rem 0;
+  line-height: 1.4;
+  width: 70%;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+form {
   color: rgba(0, 0, 0, 0.7);
-  outline: none;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 .input {
   width: 30vw;
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   background-color: rgba(255, 255, 255, 0.1);
 }
 .output {
@@ -83,10 +86,214 @@ button {
   align-self: flex-start;
   padding: 1rem 1.5rem;
   border: none;
-  cursor: pointer;
   outline: none;
   border-radius: 0.5rem;
   background-color: rgba(0, 0, 0, 0.1);
   color: rgba(0, 0, 0, 0.6);
-  margin: 1rem 0;
+}
+form button {
+  appearance: none;
+  border: none;
+  /* font-size: 14px; */
+  padding: 1em 1.25em;
+  line-height: 1;
+  background-color: #111;
+  color: #eee;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+
+/* form inputs: checkboxes and radios */
+.checkbox input,
+.radio input {
+  display: none;
+}
+.checkbox label,
+.radio label {
+  font-family: THICCCBOI;
+  font-weight: bold;
+  user-select: none;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.4);
+  transition: color 0.25s;
+}
+.checkbox input:hover + label,
+.radio input:hover + label {
+  color: rgba(0, 0, 0, 0.6);
+}
+.checkbox input:checked + label,
+.checkbox input:hover:checked + label,
+.radio input:checked + label,
+.radio input:hover:checked + label {
+  color: rgba(0, 0, 0, 1.0);
+  transition: color 0.1s;
+}
+
+/* form inputs: select */
+/* via https://www.filamentgroup.com/lab/select-css.html */
+select {
+  /* height: 1rem; */
+  appearance: none;
+  border: none;
+  margin: 0;
+  line-height: 1;
+  font-weight: bold;
+
+  padding: 0.25rem 0.5rem;
+  padding-right: 1.25rem;
+
+  position: relative;
+
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
+    linear-gradient(to bottom, #ffffff 0%,#ffffff 100%);
+  background-repeat: no-repeat, repeat;
+  background-position: right 0.5em top 0.25em, 0 0;
+  background-size: .6em auto, 100%;
+}
+select:focus {
+  border-color: #aaa;
+  box-shadow: 0 0 1px 3px rgba(59, 153, 252, .7);
+  box-shadow: 0 0 0 3px -moz-mac-focusring;
+  color: #222;
+  outline: none;
+}
+select option {
+  font-weight: normal;
+}
+
+.upper {
+  overflow: scroll;
+  flex: 1;
+}
+.lower {}
+
+form {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+form,
+form select,
+form button {
+  font-size: 0.75rem;
+}
+fieldset {
+  border: none;
+  padding: 0.5rem 1rem 0 1rem;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+}
+fieldset > div:first-child {
+  width: 5rem;
+}
+fieldset > div:last-child {
+  flex: 1;
+}
+legend {
+  font-family: THICCCBOI;
+  padding: 0;
+  margin: 0;
+  padding: 0.5rem 0;
+  line-height: 1;
+}
+.group {
+  /* margin-bottom: 0; */
+}
+.group > div {
+  display: inline-block;
+  /* padding: 0.4rem 0.4rem; */
+  padding: 0.5rem;
+  top: 2px; /* optical */
+  line-height: 1;
+}
+
+.row {
+  padding: 1rem;
+}
+
+details {
+  padding: 0.5rem 0;
+  font-size: 12px;
+}
+details summary {
+  line-height: 1;
+  font-size: 0.925em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 1px solid #999;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  margin: 0 0 0.5rem 0;
+}
+details .group {
+  padding: 0 1rem;
+}
+
+.collection {
+  padding: 0.5rem 0;
+}
+.collection > div:first-child {
+  padding: 1rem 0 0.5rem 0;
+  margin: 0;
+  margin-top: 0.25rem;
+  line-height: 1;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  /* text-transform: uppercase; */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+/*
+.collection > fieldset legend {
+}
+.collection > fieldset > div:first-child {
+}
+*/
+
+
+/*
+.collection {
+  padding: 0.5rem 1rem;
+}
+.collection > div:first-child {
+  padding: 0.5rem 0;
+}
+.collection > fieldset legend {
+  margin-left: 1rem;
+}
+.collection > fieldset > div:first-child {
+  margin-left: -1rem;
+}
+
+  
+.collection {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  margin-left: 0.75rem;
+}
+.collection > div:first-child {
+  margin-left: -0.75rem;
+  margin-bottom: 1rem;
+}
+.collection .group {
+  margin-left: -0.75rem;
+}
+*/
+
+
+
+form.busy,
+form:not(.busy) {
+  transition: opacity 0.2s linear;
+}
+form:not(.busy) {
+  opacity: 1.0;
+}
+form.busy {
+  opacity: 0.75;
+  cursor: wait;
+}
+form.busy * {
+  pointer-events: none;
 }
