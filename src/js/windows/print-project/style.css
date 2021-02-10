@@ -107,7 +107,8 @@ form button {
 /* form inputs: checkboxes and radios */
 .checkbox input,
 .radio input {
-  display: none;
+  position: absolute;
+  opacity: 0;
 }
 .checkbox label,
 .radio label {
@@ -151,15 +152,19 @@ select {
   background-position: right 0.5em top 0.25em, 0 0;
   background-size: .6em auto, 100%;
 }
-select:focus {
+select option {
+  font-weight: normal;
+}
+
+.checkbox:focus-within,
+.radio:focus-within,
+select:focus,
+button:focus {
   border-color: #aaa;
   box-shadow: 0 0 1px 3px rgba(59, 153, 252, .7);
   box-shadow: 0 0 0 3px -moz-mac-focusring;
-  color: #222;
+  /* color: #222; */
   outline: none;
-}
-select option {
-  font-weight: normal;
 }
 
 .upper {
