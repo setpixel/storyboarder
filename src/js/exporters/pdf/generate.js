@@ -456,7 +456,7 @@ async function generate (stream, { project }, cfg) {
 
     doc.addPage({
       margins: { top: 36, right: 36, bottom: 36, left: 36 },
-      size: cfg.pageSize
+      size: cfg.paperSize
     })
 
     let pg = new Rect(
