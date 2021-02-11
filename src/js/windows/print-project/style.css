@@ -41,7 +41,7 @@ body {
   color: rgba(0, 0, 0, 0.6);
 }
 .title {
-  margin: 1.5rem 0 2rem;
+  margin: 1.5rem 0 0.5rem 0;
   padding: 0;
   color: rgba(0, 0, 0, 0.8);
   font-size: 2rem;
@@ -238,7 +238,6 @@ details .group {
   margin-top: 0.25rem;
   line-height: 1;
   font-size: 0.875rem;
-  letter-spacing: 0.05em;
   /* text-transform: uppercase; */
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }
