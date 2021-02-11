@@ -81,7 +81,17 @@ const initialContext = {
   enableAction: true,
   enableNotes: true,
   enableShotNumber: true,
-  boardTimeDisplay: 'duration' // none, duration, TODO: sceneTime, scriptTime
+  boardTimeDisplay: 'duration', // none, duration, TODO: sceneTime, scriptTime
+
+  header: {
+    stats: {
+      boards: true,
+      shots: true,
+      sceneDuration: true,
+      aspectRatio: true,
+      dateExported: true
+    }
+  }
 }
 // memoize tmp filepath
 const createGetTempFilepath = function () {
@@ -158,7 +168,8 @@ const InputView = ({
   enableAction,
   enableNotes,
   enableShotNumber,
-  boardTimeDisplay
+  boardTimeDisplay,
+  header
 }) => {
   const setPaperSizeKey = event => send({
     type: 'SET_PAPER_SIZE_KEY',
@@ -251,6 +262,55 @@ const InputView = ({
               [Radio, { value: 'row', label: 'Japanese' }],
             ]
           ],
+
+
+              ['div.collection',
+                  ['div', 'Header'],
+
+              ['fieldset',
+                ['div',
+                  ['legend', { name: 'stats' }, 'Stats']],
+                ['div.group',
+
+                  [Checkbox, {
+                    name: 'stats-boards',
+                    label: 'Boards',
+                    checked: header.stats.boards,
+                    onChange: event =>
+                      send({ type: 'SET_HEADER_STATS_BOARDS', value: event.target.checked })
+                  }],
+                  [Checkbox, {
+                    name: 'stats-shots',
+                    label: 'Shots',
+                    checked: header.stats.shots,
+                    onChange: event =>
+                      send({ type: 'SET_HEADER_STATS_SHOTS', value: event.target.checked })
+                  }],
+                  [Checkbox, {
+                    name: 'stats-scene-duration',
+                    label: 'Duration',
+                    checked: header.stats.sceneDuration,
+                    onChange: event =>
+                      send({ type: 'SET_HEADER_STATS_SCENE_DURATION', value: event.target.checked })
+                  }],
+                  [Checkbox, {
+                    name: 'stats-aspect-ratio',
+                    label: 'Aspect Ratio',
+                    checked: header.stats.aspectRatio,
+                    onChange: event =>
+                      send({ type: 'SET_HEADER_STATS_ASPECT_RATIO', value: event.target.checked })
+                  }],
+                  [Checkbox, {
+                    name: 'stats-date-exported',
+                    label: 'Date',
+                    checked: header.stats.dateExported,
+                    onChange: event =>
+                      send({ type: 'SET_HEADER_STATS_DATE_EXPORTED', value: event.target.checked })
+                  }],
+
+
+                  ]],
+              ],
 
               ['div.collection',
                 ['div', 'Boards'],
@@ -404,6 +464,17 @@ const generateToCanvas = async (canvas, context) => {
   await renderTask.promise
 }
 
+const createHeaderStatsAssigner = name => (context, event) => ({
+  ...context,
+  header: {
+    ...context.header,
+    stats: {
+      ...context.header.stats,
+      [name]: event.value
+    }
+  }
+})
+
 // TODO handle generate error
 const machine = Machine({
   initial: 'generating',
@@ -477,7 +548,39 @@ const machine = Machine({
             actions: assign({ boardTimeDisplay: (_, { value }) => value }),
             target: 'generating'
           }
-        ]
+        ],
+
+
+        'SET_HEADER_STATS_BOARDS': [
+          {
+            actions: assign(createHeaderStatsAssigner('boards')),
+            target: 'generating'
+          }
+        ],
+        'SET_HEADER_STATS_SHOTS': [
+          {
+            actions: assign(createHeaderStatsAssigner('shots')),
+            target: 'generating'
+          }
+        ],
+        'SET_HEADER_STATS_SCENE_DURATION': [
+          {
+            actions: assign(createHeaderStatsAssigner('sceneDuration')),
+            target: 'generating'
+          }
+        ],
+        'SET_HEADER_STATS_ASPECT_RATIO': [
+          {
+            actions: assign(createHeaderStatsAssigner('aspectRatio')),
+            target: 'generating'
+          }
+        ],
+        'SET_HEADER_STATS_DATE_EXPORTED': [
+          {
+            actions: assign(createHeaderStatsAssigner('dateExported')),
+            target: 'generating'
+          }
+        ],
       }
     },
     generating: {

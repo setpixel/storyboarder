@@ -66,6 +66,10 @@ const drawHeader = (doc, { rect, projectTitle, pageData, pagination, stats }, cf
 
   doc.save()
 
+  //
+  //
+  // project and scene titles
+  //
   if (projectTitle) {
     doc
       .font(REGULAR)
@@ -91,42 +95,47 @@ const drawHeader = (doc, { rect, projectTitle, pageData, pagination, stats }, cf
     .font(REGULAR)
     .moveDown(between)
 
+  //
+  //
+  // stats
+  //
   doc
     .fontSize(rems(0.75))
-    .font(REGULAR)
-      .text(`Boards `, { continued: true })
-    .font(BOLD)
-      .text(`${stats.boards}`, { continued: true })
-    .font(REGULAR)
-      .text(separator, { continued: true })
-  doc
-    .font(REGULAR)
-      .text(`Shots `, { continued: true })
-    .font(BOLD)
-      .text(`${stats.shots}`, { continued: true })
-    .font(REGULAR)
-      .text(separator, { continued: true })
-  doc
-    .font(REGULAR)
-      .text(`Duration `, { continued: true })
-    .font(BOLD)
-      .text(`${durationMsecsToString(stats.sceneDuration)}`, { continued: true })
-    .font(REGULAR)
-      .text(separator, { continued: true })
-  doc
-    .font(REGULAR)
-      .text(`Aspect Ratio `, { continued: true })
-    .font(BOLD)
-      .text(`${humanizeAspectRatio(stats.aspectRatio)}`)
-    .font(REGULAR)
-    .moveDown(between)
 
-  doc
-    .font(REGULAR)
-      .text(`Exported `, { continued: true })
-    .font(BOLD)
-      .text(`${stats.date}`)
+  let statsEntries = [
+    cfg.header.stats.boards && ['Boards', stats.boards],
+    cfg.header.stats.shots && ['Shots', stats.shots],
+    cfg.header.stats.sceneDuration && ['Duration', durationMsecsToString(stats.sceneDuration)],
+    cfg.header.stats.aspectRatio && ['Aspect Ratio', humanizeAspectRatio(stats.aspectRatio)]
+  ].filter(Boolean)
+  statsEntries.forEach(([name, value], index, array) => {
+    let notLast = index < array.length - 1
+    doc.font(REGULAR)
+    doc.text(`${name} `, { continued: true })
+    doc.font(BOLD)
+    doc.text(value, { continued: notLast ? true : false })
+    doc.font(REGULAR)
+    if (notLast) {
+      doc.text(separator, { continued: true })
+    }
+  })
 
+  if (cfg.header.stats.dateExported) {
+    if (statsEntries.length > 0) {
+      doc.moveDown(between)
+    }
+
+    doc
+      .font(REGULAR)
+        .text(`Exported `, { continued: true })
+      .font(BOLD)
+        .text(`${stats.date}`)
+  }
+
+  //
+  //
+  // pagination
+  //
   doc
     .font(REGULAR)
     .fontSize(rems(6/8))
