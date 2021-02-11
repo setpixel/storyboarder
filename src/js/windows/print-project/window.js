@@ -2,7 +2,7 @@ const fs = require('fs-extra')
 const os = require('os')
 const path = require('path')
 const { shell, ipcRenderer } = require('electron')
-const { Machine, assign, interpret } = require('xstate')
+const { interpret } = require('xstate')
 const React = require('react')
 const ReactDOM = require('react-dom')
 const { useService } = require('@xstate/react')
@@ -12,6 +12,8 @@ const pdfjsLib = require('pdfjs-dist')
 const moment = require('moment')
 
 const { getProjectData } = require('./data')
+const { specs, machine: printProjectMachine } = require('./machine')
+
 const generate = require('../../exporters/pdf')
 const h = require('../../utils/h')
 
@@ -42,57 +44,9 @@ const omit = (original = {}, keys = []) => {
 
 const range = (_, end) => new Array(end).fill(undefined).map((_, value) => value + 1)
 
-const specs = {
-  paperSize: {
-    'a4': [841.89, 595.28],
-    'letter': [792.0, 612.0]
-  },
-  rows: range(1, 10),
-  columns: range(1, 10)
-}
-
-const getPaperSize = (key, orientation) => {
-  let portrait = (a, b) => a - b
-  let landscape = (a, b) => b - a
-  let size = specs.paperSize[key]
-  switch (orientation) {
-    case 'portrait':
-      return size.sort(portrait)
-    case 'landscape':
-      return size.sort(landscape)
-  }
-}
-
 const getGeneratorConfig = context =>
   omit(context, ['paperSizeKey', 'orientation'])
 
-const initialContext = {
-  paperSizeKey: 'a4',
-  orientation: 'landscape',
-  paperSize: getPaperSize('a4', 'landscape'),
-
-  gridDim: [2, 5],
-  pageToPreview: 0,
-  direction: 'row',
-
-  pages: [0, 0],
-
-  enableDialogue: true,
-  enableAction: true,
-  enableNotes: true,
-  enableShotNumber: true,
-  boardTimeDisplay: 'duration', // none, duration, TODO: sceneTime, scriptTime
-
-  header: {
-    stats: {
-      boards: true,
-      shots: true,
-      sceneDuration: true,
-      aspectRatio: true,
-      dateExported: true
-    }
-  }
-}
 // memoize tmp filepath
 const createGetTempFilepath = function () {
   let filepath
@@ -228,7 +182,7 @@ const InputView = ({
                   onChange: event =>
                     send({ type: 'SET_GRID_ROWS', value: parseInt(event.target.value) })
                   },
-                  specs.rows.map(value =>
+                  range(...specs.rows).map(value =>
                     ['option', { name: 'grid-rows', value: value }, value]
                   )
                 ],
@@ -240,7 +194,7 @@ const InputView = ({
                   onChange: event =>
                     send({ type: 'SET_GRID_COLUMNS', value: parseInt(event.target.value) })
                   },
-                  specs.columns.map(value =>
+                  range(...specs.columns).map(value =>
                     ['option', { name: 'grid-columns', value: value }, value]
                   )
                 ]
@@ -410,6 +364,7 @@ const PrintApp = ({ service }) => {
   })
 }
 
+// service
 const exportToFile = async (context, event) => {
   const { project } = context
 
@@ -423,9 +378,9 @@ const exportToFile = async (context, event) => {
   console.log('Exported to ' + filepath)
   shell.showItemInFolder(filepath)
 }
-
-const generateToCanvas = async (canvas, context) => {
-  let { project } = context
+// service
+const generateToCanvas = async (context, event) => {
+  let { project, canvas } = context
 
   let cfg = {
     ...context,
@@ -464,200 +419,6 @@ const generateToCanvas = async (canvas, context) => {
   await renderTask.promise
 }
 
-const createHeaderStatsAssigner = name => (context, event) => ({
-  ...context,
-  header: {
-    ...context.header,
-    stats: {
-      ...context.header.stats,
-      [name]: event.value
-    }
-  }
-})
-
-const machine = Machine({
-  id: 'print-project',
-  context: initialContext,
-  initial: 'busy',
-  states: {
-    available: {
-      id: 'available',
-      initial: 'idle',
-      states: {
-        idle: {
-        },
-        debouncing: {
-          after: {
-            1100: '#busy.generating'
-          }
-        }
-      },
-      on: {
-        'EXPORT': 'busy.exporting',
-        'SET_PAPER_SIZE_KEY': [
-          {
-            actions: assign((context, event) => ({
-              paperSizeKey: event.value,
-              paperSize: getPaperSize(event.value, context.orientation)
-            })),
-            target: '.debouncing',
-            internal: false
-          }
-        ],
-        'SET_ORIENTATION': [
-          {
-            actions: assign((context, event) => ({
-              orientation: event.value,
-              paperSize: getPaperSize(context.paperSizeKey, event.value)
-            })),
-            target: '.debouncing',
-            internal: false
-          }
-        ],
-        'SET_GRID_ROWS': [
-          {
-            actions: assign({ gridDim: ({ gridDim }, { value }) => [value, gridDim[1]] }),
-            target: '.debouncing',
-            internal: false
-          }
-        ],
-        'SET_GRID_COLUMNS': [
-          {
-            actions: assign({ gridDim: ({ gridDim }, { value }) => [gridDim[0], value] }),
-            target: '.debouncing',
-            internal: false
-          }
-        ],
-        'SET_DIRECTION': [
-          {
-            actions: assign({ direction: (_, { value }) => value }),
-            target: '.debouncing',
-            internal: false
-          }
-        ],
-        'SET_ENABLE_DIALOGUE': [
-          {
-            actions: assign({ enableDialogue: (_, { value }) => value }),
-            target: '.debouncing',
-            internal: false
-          }
-        ],
-        'SET_ENABLE_ACTION': [
-          {
-            actions: assign({ enableAction: (_, { value }) => value }),
-            target: '.debouncing',
-            internal: false
-          }
-        ],
-        'SET_ENABLE_NOTES': [
-          {
-            actions: assign({ enableNotes: (_, { value }) => value }),
-            target: '.debouncing',
-            internal: false
-          }
-        ],
-        'SET_ENABLE_SHOT_NUMBER': [
-          {
-            actions: assign({ enableShotNumber: (_, { value }) => value }),
-            target: '.debouncing',
-            internal: false
-          }
-        ],
-        'SET_BOARD_TIME_DISPLAY': [
-          {
-            actions: assign({ boardTimeDisplay: (_, { value }) => value }),
-            target: '.debouncing',
-            internal: false
-          }
-        ],
-
-
-        'SET_HEADER_STATS_BOARDS': [
-          {
-            actions: assign(createHeaderStatsAssigner('boards')),
-            target: '.debouncing',
-            internal: false
-          }
-        ],
-        'SET_HEADER_STATS_SHOTS': [
-          {
-            actions: assign(createHeaderStatsAssigner('shots')),
-            target: '.debouncing',
-            internal: false
-          }
-        ],
-        'SET_HEADER_STATS_SCENE_DURATION': [
-          {
-            actions: assign(createHeaderStatsAssigner('sceneDuration')),
-            target: '.debouncing',
-            internal: false
-          }
-        ],
-        'SET_HEADER_STATS_ASPECT_RATIO': [
-          {
-            actions: assign(createHeaderStatsAssigner('aspectRatio')),
-            target: '.debouncing',
-            internal: false
-          }
-        ],
-        'SET_HEADER_STATS_DATE_EXPORTED': [
-          {
-            actions: assign(createHeaderStatsAssigner('dateExported')),
-            target: '.debouncing',
-            internal: false
-          }
-        ],
-      }
-    },
-    busy: {
-      id: 'busy',
-      initial: 'generating',
-      states: {
-        generating: {
-          invoke: {
-            src: (context, event) => generateToCanvas(context.canvas, context),
-            onDone: {
-              target: '#available'
-            },
-            onError: {
-              target: '#warning'
-            }
-          }
-        },
-        exporting: {
-          invoke: {
-            id: 'exportToFile',
-            src: exportToFile,
-            onDone: {
-              target: '#available'
-            },
-            onError: {
-              target: '#warning'
-            }
-          },
-        }
-      }
-    },
-    warning: {
-      id: 'warning',
-      invoke: {
-        src: async (context, event) => {
-          // TODO electron-log
-          console.warn(event.data)
-          alert(event.data)
-        },
-        onDone: '#available'
-      }
-    },
-    finished: {
-      type: 'final'
-    }
-  },
-  on: {
-    'CLOSE': 'finished'
-  }
-})
-
 const start = async () => {
   let project
   let canvas
@@ -668,11 +429,18 @@ const start = async () => {
   document.querySelector('.output .inner').appendChild(canvas)
 
   const service = interpret(
-    machine.withContext({
-      ...machine.initialState.context,
-      project,
-      canvas
-    })
+    printProjectMachine
+      .withConfig({
+        services: {
+          generateToCanvas,
+          exportToFile 
+        }
+      })
+      .withContext({
+        ...printProjectMachine.context,
+        project,
+        canvas
+      })
   )
   .onTransition((state, event) => console.log(state, event))
   .onDone(() => window.close())
