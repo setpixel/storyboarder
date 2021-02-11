@@ -24,7 +24,6 @@ const show = async ({ parent }) => {
     center: true,
     resizable: false,
 
-    frame: false,
     modal: true,
 
     webPreferences: {
