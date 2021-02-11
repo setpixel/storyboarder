@@ -16,6 +16,7 @@ const omit = (original = {}, keys = []) => {
   }
   return clone
 }
+
 // convert context to generator config object
 const getGeneratorConfig = context =>
   omit(context, ['paperSizeKey', 'orientation'])
@@ -28,7 +29,12 @@ const fit = ([wi, hi], [ws, hs]) =>
     ? [wi * hs / hi, hs]
     : [ws, hi * ws / wi]
 
+
+
+//
+//
 // TODO store outpath in context?
+//
 // memoize tmp filepath
 const createGetTempFilepath = function () {
   let filepath
@@ -53,7 +59,8 @@ const getExportFilename = (project, date) => {
   return filename = `${base} ${datestamp}.pdf`
 }
 
-// service
+
+
 const exportToFile = async (context, event) => {
   const { project } = context
 
@@ -67,7 +74,7 @@ const exportToFile = async (context, event) => {
   console.log('Exported to ' + filepath)
   shell.showItemInFolder(filepath)
 }
-// service
+
 const generateToCanvas = async (context, event) => {
   let { project, canvas } = context
 
