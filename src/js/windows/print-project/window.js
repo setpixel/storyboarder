@@ -36,7 +36,7 @@ const start = async () => {
         canvas
       })
   )
-  .onTransition((state, event) => console.log(state, event))
+  .onTransition((state, event) => console.log(JSON.stringify(event) + ' ➤ ' + JSON.stringify(state.value)))
   .onDone(() => window.close())
   .start()
 
