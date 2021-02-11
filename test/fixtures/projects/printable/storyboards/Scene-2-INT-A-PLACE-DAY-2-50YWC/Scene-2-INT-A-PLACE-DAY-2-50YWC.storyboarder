@@ -96,7 +96,7 @@
       "time": 4000,
       "lineMileage": 4528.145275830267,
       "audio": null,
-      "dialogue": "PERSON B: Hi!",
+      "dialogue": "PERSON B: Привет!",
       "action": "Waving back to say hi.",
       "notes": "The background should be very dark because this person lives in a cave.",
       "duration": "1300"

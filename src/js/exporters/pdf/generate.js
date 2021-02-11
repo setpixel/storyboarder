@@ -5,6 +5,7 @@ const { Rect } = require('@thi.ng/geom')
 const moment = require('moment')
 
 const groupByPage = require('./group-by-page')
+const stringContainsForeign = require('./string-contains-foreign')
 
 const {
   boardDuration,
@@ -18,6 +19,8 @@ const {
 
 const REGULAR = path.join(__dirname, '..', '..', '..', 'fonts', 'thicccboi', 'THICCCBOI-Regular.woff2')
 const BOLD = path.join(__dirname, '..', '..', '..', 'fonts', 'thicccboi', 'THICCCBOI-Bold.woff2')
+const FALLBACK = path.join(__dirname, '..', '..', '..', 'fonts', 'unicore.ttf')
+
 // via https://stackoverflow.com/questions/6565703
 const fit = ([wi, hi], [ws, hs]) =>
   ws / hs > wi / hi
@@ -54,6 +57,25 @@ const HUMANIZED_ASPECT_RATIOS = {
 const humanizeAspectRatio = aspectRatio => {
   let index = Number(aspectRatio).toFixed(3)
   return HUMANIZED_ASPECT_RATIOS[index] || index.toString()
+}
+
+//
+//
+// patch PDFDocument .text to force FALLBACK font if "foreign" text is detected
+//
+// TODO allow for a bold weight fallback
+const patchPDFDocument = doc => {
+  let fn = doc.text
+
+  doc.text = function () {
+    let [text, ...rest] = arguments
+    if (stringContainsForeign(text)) {
+      this.font(FALLBACK)
+    }
+    fn.apply(this, [text, ...rest])
+    return this
+  }
+  doc.textWithoutFallback = fn
 }
 
 const drawHeader = (doc, { rect, projectTitle, pageData, pagination, stats }, cfg) => {
@@ -421,7 +443,7 @@ const drawFooter = (doc, { rect }, cfg) => {
     .fontSize(10)
     .fillColor('black')
     .fillOpacity(0.6)
-    .text(
+    .textWithoutFallback(
       text,
       ...v.add2([], inner.pos, [0, inner.size[1] * 0.5 - 1/* optical */]),
       {
@@ -449,6 +471,8 @@ async function generate (stream, { project }, cfg) {
     autoFirstPage: false,
     size: cfg.paperSize
   })
+  patchPDFDocument(doc)
+
   doc.pipe(stream)
   doc.registerFont(REGULAR, REGULAR)
   doc.registerFont(BOLD, BOLD)
