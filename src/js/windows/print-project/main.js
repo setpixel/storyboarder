@@ -33,7 +33,7 @@ const show = async ({ parent }) => {
       enableRemoteModule: true
     }
   })
-  win.on('closed', () => (win = null))
+  win.on('closed', () => { win = null })
   await win.loadFile(path.join(__dirname, 'index.html'))
   win.show()
 }
