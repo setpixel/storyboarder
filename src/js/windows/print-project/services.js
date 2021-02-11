@@ -8,6 +8,7 @@ const pdfjsLib = require('pdfjs-dist')
 pdfjsLib.GlobalWorkerOptions.workerSrc = '../../../../node_modules/pdfjs-dist/build/pdf.worker.js'
 
 const generate = require('../../exporters/pdf')
+const log = require('../../shared/storyboarder-electron-log')
 
 const omit = (original = {}, keys = []) => {
   const clone = { ...original }
@@ -44,7 +45,7 @@ const createGetTempFilepath = function () {
     } else {
       let directory = fs.mkdtempSync(path.join(os.tmpdir(), 'storyboarder-'))
       filepath = path.join(directory, 'export.pdf')
-      console.log('writing to', filepath)
+      log.info('writing to', filepath)
       return filepath
     }
   }
@@ -71,7 +72,7 @@ const exportToFile = async (context, event) => {
   let stream = fs.createWriteStream(filepath)
   await generate(stream, { project }, getGeneratorConfig(context))
 
-  console.log('Exported to ' + filepath)
+  log.info('exported to ' + filepath)
   shell.showItemInFolder(filepath)
 }
 
@@ -115,7 +116,13 @@ const generateToCanvas = async (context, event) => {
   await renderTask.promise
 }
 
+const displayWarning = async (context, event) => {
+  log.warn(event.data)
+  alert(event.data)
+}
+
 module.exports = {
   generateToCanvas,
-  exportToFile
+  exportToFile,
+  displayWarning
 }

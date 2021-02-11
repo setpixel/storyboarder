@@ -229,11 +229,7 @@ const machine = Machine({
     warning: {
       id: 'warning',
       invoke: {
-        src: async (context, event) => {
-          // TODO electron-log
-          console.warn(event.data)
-          alert(event.data)
-        },
+        src: 'displayWarning',
         onDone: '#available'
       }
     },
