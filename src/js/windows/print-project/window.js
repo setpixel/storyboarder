@@ -180,7 +180,7 @@ const InputView = ({
     [React.Fragment, [
       ['a.close', { href: '#', onClick: onClose }, '×'],
 
-      ['form', { action: '#', className: ['generating', 'exporting'].some(state.matches) ? 'busy' : null },
+      ['form', { action: '#', className: state.matches('busy') ? 'busy' : null },
         ['div.upper',
           ['h1.title', 'Print'],
           ['p', 'Your storyboard printed the way you like. Choose the format and either directly print or export it to PDF.'],
@@ -322,7 +322,7 @@ const InputView = ({
                       name: 'text-dialogue',
                       label: 'Dialogue',
                       checked: enableDialogue,
-                      onChange: preventDefault(event =>
+                      onChange: (event =>
                         send({ type: 'SET_ENABLE_DIALOGUE', value: event.target.checked })
                       )
                     }],
@@ -330,7 +330,7 @@ const InputView = ({
                       name: 'text-action',
                       label: 'Action',
                       checked: enableAction,
-                      onChange: preventDefault(event =>
+                      onChange: (event =>
                         send({ type: 'SET_ENABLE_ACTION', value: event.target.checked })
                       )
                     }],
@@ -338,7 +338,7 @@ const InputView = ({
                       name: 'text-notes',
                       label: 'Notes',
                       checked: enableNotes,
-                      onChange: preventDefault(event =>
+                      onChange: (event =>
                         send({ type: 'SET_ENABLE_NOTES', value: event.target.checked })
                       )
                     }]
@@ -352,7 +352,7 @@ const InputView = ({
                         name: 'details-shot-number',
                         label: 'Shot Number',
                         checked: enableShotNumber,
-                        onChange: preventDefault(event =>
+                        onChange: (event =>
                           send({ type: 'SET_ENABLE_SHOT_NUMBER', value: event.target.checked })
                         )
                       }]
@@ -475,21 +475,33 @@ const createHeaderStatsAssigner = name => (context, event) => ({
   }
 })
 
-// TODO handle generate error
 const machine = Machine({
-  initial: 'generating',
+  id: 'print-project',
   context: initialContext,
+  initial: 'busy',
   states: {
-    idle: {
+    available: {
+      id: 'available',
+      initial: 'idle',
+      states: {
+        idle: {
+        },
+        debouncing: {
+          after: {
+            1100: '#busy.generating'
+          }
+        }
+      },
       on: {
-        'EXPORT': 'exporting',
+        'EXPORT': 'busy.exporting',
         'SET_PAPER_SIZE_KEY': [
           {
             actions: assign((context, event) => ({
               paperSizeKey: event.value,
               paperSize: getPaperSize(event.value, context.orientation)
             })),
-            target: 'generating'
+            target: '.debouncing',
+            internal: false
           }
         ],
         'SET_ORIENTATION': [
@@ -498,55 +510,64 @@ const machine = Machine({
               orientation: event.value,
               paperSize: getPaperSize(context.paperSizeKey, event.value)
             })),
-            target: 'generating'
+            target: '.debouncing',
+            internal: false
           }
         ],
         'SET_GRID_ROWS': [
           {
             actions: assign({ gridDim: ({ gridDim }, { value }) => [value, gridDim[1]] }),
-            target: 'generating'
+            target: '.debouncing',
+            internal: false
           }
         ],
         'SET_GRID_COLUMNS': [
           {
             actions: assign({ gridDim: ({ gridDim }, { value }) => [gridDim[0], value] }),
-            target: 'generating'
+            target: '.debouncing',
+            internal: false
           }
         ],
         'SET_DIRECTION': [
           {
             actions: assign({ direction: (_, { value }) => value }),
-            target: 'generating'
+            target: '.debouncing',
+            internal: false
           }
         ],
         'SET_ENABLE_DIALOGUE': [
           {
             actions: assign({ enableDialogue: (_, { value }) => value }),
-            target: 'generating'
+            target: '.debouncing',
+            internal: false
           }
         ],
         'SET_ENABLE_ACTION': [
           {
             actions: assign({ enableAction: (_, { value }) => value }),
-            target: 'generating'
+            target: '.debouncing',
+            internal: false
           }
         ],
         'SET_ENABLE_NOTES': [
           {
             actions: assign({ enableNotes: (_, { value }) => value }),
-            target: 'generating'
+            target: '.debouncing',
+            internal: false
           }
         ],
         'SET_ENABLE_SHOT_NUMBER': [
           {
             actions: assign({ enableShotNumber: (_, { value }) => value }),
-            target: 'generating'
+            target: '.debouncing',
+            internal: false
           }
         ],
         'SET_BOARD_TIME_DISPLAY': [
           {
             actions: assign({ boardTimeDisplay: (_, { value }) => value }),
-            target: 'generating'
+            target: '.debouncing',
+            internal: false
           }
         ],
 
@@ -554,66 +575,78 @@ const machine = Machine({
         'SET_HEADER_STATS_BOARDS': [
           {
             actions: assign(createHeaderStatsAssigner('boards')),
-            target: 'generating'
+            target: '.debouncing',
+            internal: false
           }
         ],
         'SET_HEADER_STATS_SHOTS': [
           {
             actions: assign(createHeaderStatsAssigner('shots')),
-            target: 'generating'
+            target: '.debouncing',
+            internal: false
           }
         ],
         'SET_HEADER_STATS_SCENE_DURATION': [
           {
             actions: assign(createHeaderStatsAssigner('sceneDuration')),
-            target: 'generating'
+            target: '.debouncing',
+            internal: false
           }
         ],
         'SET_HEADER_STATS_ASPECT_RATIO': [
           {
             actions: assign(createHeaderStatsAssigner('aspectRatio')),
-            target: 'generating'
+            target: '.debouncing',
+            internal: false
           }
         ],
         'SET_HEADER_STATS_DATE_EXPORTED': [
           {
             actions: assign(createHeaderStatsAssigner('dateExported')),
-            target: 'generating'
+            target: '.debouncing',
+            internal: false
           }
         ],
       }
     },
-    generating: {
-      invoke: {
-        src: (context, event) => generateToCanvas(context.canvas, context),
-        onDone: {
-          target: 'idle'
+    busy: {
+      id: 'busy',
+      initial: 'generating',
+      states: {
+        generating: {
+          invoke: {
+            src: (context, event) => generateToCanvas(context.canvas, context),
+            onDone: {
+              target: '#available'
+            },
+            onError: {
+              target: '#warning'
+            }
+          }
         },
-        onError: {
-          target: 'warning'
+        exporting: {
+          invoke: {
+            id: 'exportToFile',
+            src: exportToFile,
+            onDone: {
+              target: '#available'
+            },
+            onError: {
+              target: '#warning'
+            }
+          },
         }
       }
     },
-    exporting: {
-      invoke: {
-        id: 'exportToFile',
-        src: exportToFile,
-        onDone: {
-          target: 'idle'
-        },
-        onError: {
-          target: 'warning'
-        }
-      },
-    },
     warning: {
+      id: 'warning',
       invoke: {
         src: async (context, event) => {
           // TODO electron-log
           console.warn(event.data)
           alert(event.data)
         },
-        onDone: 'idle'
+        onDone: '#available'
       }
     },
     finished: {
@@ -643,6 +676,7 @@ const start = async () => {
   )
   .onTransition((state, event) => console.log(state, event))
   .onDone(() => window.close())
+  .start()
 
   ReactDOM.render(
     React.createElement(PrintApp, { service }),
@@ -656,7 +690,5 @@ const start = async () => {
         break
     }
   })
-
-  service.start()
 }
 start()
