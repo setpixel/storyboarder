@@ -46,13 +46,6 @@ body {
   color: rgba(0, 0, 0, 0.8);
   font-size: 2rem;
 }
-.title + p {
-  font-size: 0.9375rem;
-  margin: -1.5rem 0 1rem 0;
-  line-height: 1.4;
-  width: 70%;
-  color: rgba(0, 0, 0, 0.6);
-}
 
 form {
   color: rgba(0, 0, 0, 0.7);

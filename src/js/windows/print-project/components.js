@@ -76,7 +76,6 @@ const InputView = ({
       ['form', { action: '#', className: state.matches('busy') ? 'busy' : null },
         ['div.upper',
           ['h1.title', 'Print'],
-          ['p', 'Your storyboard printed the way you like. Choose the format and either directly print or export it to PDF.'],
 
           ['fieldset',
             ['div',
