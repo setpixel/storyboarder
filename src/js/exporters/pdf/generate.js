@@ -252,7 +252,7 @@ const drawBoardRow = (doc, { rect, scene, board, imagesPath }, cfg) => {
   //
   if (cfg.enableShotNumber) {
     doc
-      .fontSize(10)
+      .fontSize(cfg.boardTextSize)
       .fillColor('black')
       .text(board.shot, ...cellAinner.pos)
   }
@@ -280,7 +280,7 @@ const drawBoardRow = (doc, { rect, scene, board, imagesPath }, cfg) => {
       .save()
       .rect(...textR.pos, ...textR.size)
       .clip()
-        .fontSize(10)
+        .fontSize(cfg.boardTextSize)
         .fillColor('black')
         .text(
           entry.text,
@@ -364,7 +364,7 @@ const drawBoardColumn = (doc, { rect, scene, board, imagesPath }, cfg) => {
   let middle = [upperR.pos[0], upperR.pos[1] + upperR.size[1] * 0.5]
   if (cfg.enableShotNumber) {
     doc
-      .fontSize(10)
+      .fontSize(cfg.boardTextSize)
       .fillColor('black')
       .text(board.shot, ...middle, {
         baseline: 'middle'
@@ -372,7 +372,7 @@ const drawBoardColumn = (doc, { rect, scene, board, imagesPath }, cfg) => {
   }
   if (cfg.boardTimeDisplay == 'duration') {
     doc
-      .fontSize(10)
+      .fontSize(cfg.boardTextSize)
       .fillColor('black')
       .text(durationMsecsToString(boardDuration(scene, board)), ...middle, {
         width: upperR.size[0],
@@ -402,7 +402,7 @@ const drawBoardColumn = (doc, { rect, scene, board, imagesPath }, cfg) => {
     textR.pos[1] += textR.size[1] * e
 
     doc
-      .fontSize(11)
+      .fontSize(cfg.boardTextSize)
       .fillColor('black')
       .text(
         entry.text,
@@ -464,7 +464,8 @@ async function generate (stream, { project }, cfg) {
     enableAction,
     enableNotes,
     enableShotNumber,
-    boardTimeDisplay
+    boardTimeDisplay,
+    boardTextSize
   } = cfg
 
   let doc = new PDFDocument({

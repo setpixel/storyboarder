@@ -8,7 +8,8 @@ const specs = {
     'letter': [792.0, 612.0]
   },
   rows: [1, 10],
-  columns: [1, 10]
+  columns: [1, 10],
+  boardTextSize: [4, 16]
 }
 
 const getPaperSize = (key, orientation) => {
@@ -43,6 +44,7 @@ const initialContext = {
   enableNotes: true,
   enableShotNumber: true,
   boardTimeDisplay: 'duration', // none, duration, TODO: sceneTime, scriptTime
+  boardTextSize: 10,
 
   header: {
     stats: {
@@ -182,6 +184,11 @@ const machine = Machine({
             internal: false
           }
         ],
+        'SET_BOARD_TEXT_SIZE': {
+          actions: assign({ boardTextSize: (_, { value }) => value }),
+          target: '.debouncing',
+          internal: false
+        },
 
 
         'SET_HEADER_STATS_BOARDS': [

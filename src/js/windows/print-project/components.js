@@ -65,6 +65,7 @@ const InputView = ({
   enableNotes,
   enableShotNumber,
   boardTimeDisplay,
+  boardTextSize,
   header
 }) => {
   const setPaperSizeKey = event => send({
@@ -300,7 +301,25 @@ const InputView = ({
                       // [Radio, { value: 'scriptTime', label: 'Script Time' }] // TODO Script
                     ]
                   ],
-                  
+
+                  ['fieldset',
+                    ['div',
+                      ['legend', { name: 'board-text-size' }, 'Text Size']
+                    ],
+
+                    ['.select',
+                      ['select', {
+                        value: boardTextSize,
+                        onChange: event =>
+                          send({ type: 'SET_BOARD_TEXT_SIZE', value: parseInt(event.target.value) })
+                        },
+                        range(...specs.boardTextSize).map(value =>
+                          ['option', { name: 'board-text-size', value: value }, value]
+                        )
+                      ]
+                    ]
+                  ]
+
                 ],
 
               // ['details', { open: true },
