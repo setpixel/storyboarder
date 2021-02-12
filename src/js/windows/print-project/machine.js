@@ -1,5 +1,7 @@
 const { Machine, assign } = require('xstate')
 
+const groupByPage = require('../../exporters/pdf/group-by-page')
+
 const specs = {
   paperSize: {
     'a4': [841.89, 595.28],
@@ -31,9 +33,9 @@ const initialContext = {
   gridDim: [2, 5],
   direction: 'row',
 
-  // pages to export (TODO constrain max depends on gridDim, project.scenes)
   pages: [0, 0],
-  // pages to preview (TODO constrain max depends on gridDim, project.scenes)
+
+  // pages to preview (TODO constrain max, depends .pages)
   pageToPreview: 0,
 
   enableDialogue: true,
@@ -64,6 +66,26 @@ const createHeaderStatsAssigner = name => (context, event) => ({
   }
 })
 
+const gridRowsAssigner = ({ gridDim }, { value }) => ({
+  gridDim: [value, gridDim[1]]
+})
+
+const gridColumnsAssigner = ({ gridDim }, { value }) => ({
+  gridDim: [gridDim[0], value]
+})
+
+const pagesAssigner = (context, event) => {
+  let { gridDim, project } = context
+  let [rows, columns] = gridDim
+
+  // TODO to improve performance, only calculate total number of pages
+  let groups = groupByPage(project.scenes, rows * columns)
+
+  return {
+    pages: [0, groups.length - 1]
+  }
+}
+
 const machine = Machine({
   id: 'print-project',
   context: initialContext,
@@ -72,6 +94,7 @@ const machine = Machine({
     available: {
       id: 'available',
       initial: 'idle',
+      entry: [assign(pagesAssigner)],
       states: {
         idle: {
         },
@@ -105,14 +128,14 @@ const machine = Machine({
         ],
         'SET_GRID_ROWS': [
           {
-            actions: assign({ gridDim: ({ gridDim }, { value }) => [value, gridDim[1]] }),
+            actions: [assign(gridRowsAssigner), assign(pagesAssigner)],
             target: '.debouncing',
             internal: false
           }
         ],
         'SET_GRID_COLUMNS': [
           {
-            actions: assign({ gridDim: ({ gridDim }, { value }) => [gridDim[0], value] }),
+            actions: [assign(gridColumnsAssigner), assign(pagesAssigner)],
             target: '.debouncing',
             internal: false
           }
