@@ -8,7 +8,10 @@ const preventDefault = (fn, ...args) => e => {
   fn(e, ...args)
 }
 
-const range = (_, end) => new Array(end).fill(undefined).map((_, value) => value + 1)
+const range = (start, end) => new Array(end - start + 1)
+.fill(undefined)
+.map((_, value) => value + start - 1)
+.map(n => n + 1)
 
 const RadioGroup = ({ name, value, onChange, children }) =>
   React.createElement('div', { className: 'group' }, React.Children.map(children, child =>
