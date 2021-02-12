@@ -509,8 +509,7 @@ async function generate (stream, { project }, cfg) {
     grid.pos[1] = header.pos[1] + header.size[1]
     footer.pos[1] = grid.pos[1] + grid.size[1]
 
-    // doc
-
+    // TODO extract helpers?
     const getBoardsCount = scene => scene.boards.length
     const getShotsCount = scene => scene.boards.filter((board, i) => i == 0 || board.newShot).length
 
