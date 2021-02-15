@@ -204,10 +204,6 @@ const drawBoardRow = (doc, { rect, scene, board, imagesPath }, cfg) => {
     .rect(...imageB.pos, ...imageB.size)
     .fillColor('black')
     .fill()
-  doc
-    .rect(...imageR.pos, ...imageR.size)
-    .fillColor('blue')
-    .fill()
 
   //
   //
