@@ -14,6 +14,7 @@ const isDev = require('electron-is-dev')
 const log = require('../shared/storyboarder-electron-log')
 log.catchErrors()
 const ReactDOM = require('react-dom')
+const { useEffect } = require('react')
 const h = require('../utils/h')
 const ShotGeneratorPanel = require('./components/ShotGeneratorPanel')
 
@@ -107,6 +108,8 @@ const translateCheckbox = (elementName, traslationKey) => {
   childNodes[childNodes.length - 1].textContent = i18n.t(traslationKey)
 }
 
+const GridView = require("./components/GridView")
+const { setEtag, getEtag } = require('../utils/etags')
 const translateTooltip = (elementName, traslationKey) => {
   let element = document.querySelector(elementName)
   if(!element) return
@@ -275,8 +278,8 @@ let imageFileDirtyTimer
 let isSavingImageFile = false // lock for saveImageFile
 
 let drawIdleTimer
-
-let isEditMode = false
+let editModeState = false 
+let isEditMode = () => editModeState || gridView.IsEditMode
 let editModeTimer
 let enableEditModeDelay = 750 // msecs
 let periodicDragUpdateTimer
@@ -322,6 +325,8 @@ let dragPoint
 let dragTarget
 let scrollPoint
 
+let gridView
+
 // CAF cancel tokens for async functions
 let cancelTokens = {}
 
@@ -332,14 +337,6 @@ const framesToMsecs = value => Math.round(value / boardData.fps * 1000)
 const serial = funcs =>
     funcs.reduce((promise, func) =>
         promise.then(result => func().then(Array.prototype.concat.bind(result))), Promise.resolve([]))
-
-// TODO better name than etags?
-// TODO store in boardData instead, but exclude from JSON?
-// TODO use mtime trick like we do for layers and posterframes?
-// cache buster for thumbnails
-let etags = {}
-const setEtag = absoluteFilePath => { etags[absoluteFilePath] = Date.now() }
-const getEtag = absoluteFilePath => etags[absoluteFilePath] || '0'
 
 const cacheKey = filepath => {
   try {
@@ -1222,7 +1219,7 @@ const loadBoardUI = async () => {
       clearTimeout(editModeTimer)
     }
 
-    if (isEditMode && dragMode) {
+    if (isEditMode() && dragMode) {
       // defer to periodicDragUpdate()
       return
     }
@@ -1243,27 +1240,49 @@ const loadBoardUI = async () => {
     clearTimeout(editModeTimer)
 
     // log.info('pointerup', isEditMode)
-    if (isEditMode) {
-      let x = e.clientX, y = e.clientY
-
-      // 1) try to find nearest thumbnail, otherwise,
-      // HACK 2) try to find last known thumbnail position
-      let el = thumbnailFromPoint(x, y) || thumbnailCursor.el
-      let offset = 0
-      if (el) {
-        offset = el.getBoundingClientRect().width
-        el = thumbnailFromPoint(x, y, offset/2)
-      }
-
-      if (!el) {
-        log.warn("couldn't find nearest thumbnail")
-      }
-
+    if (isEditMode()) {
+      let checkoutBoard 
       let index
-      if (isBeforeFirstThumbnail(x, y)) {
-        index = 0
-      } else if (el) {
-        index = Number(el.dataset.thumbnail) + 1
+      if(gridView.IsEditMode) {
+        let el = gridView.gridViewFromPoint(gridView.gridViewCursor.x, gridView.gridViewCursor.y) || gridView.gridViewCursor.el
+        if (!el) {
+          log.warn("couldn't find nearest thumbnail")
+          return
+        }
+        if (el) {
+          if(gridView.gridViewCursor.side === "Left") {
+            index = Number(el.dataset.thumbnail)
+          } else {
+            index = Number(el.dataset.thumbnail) + 1
+          }
+        }
+        checkoutBoard = () => gridView.renderGridView(() => gotoBoard(currentBoard, true))
+
+      } else {
+        let x = e.clientX, y = e.clientY
+
+        // 1) try to find nearest thumbnail, otherwise,
+        // HACK 2) try to find last known thumbnail position
+        let el = thumbnailFromPoint(x, y) || thumbnailCursor.el
+  
+        el =  thumbnailFromPoint(x, y) || thumbnailCursor.el
+        let offset = 0
+        if (el) {
+          offset = el.getBoundingClientRect().width
+          el =  gridView.gridViewFromPoint(x, y, offset/2) 
+        }
+  
+        if (!el) {
+          log.warn("couldn't find nearest thumbnail")
+        }
+  
+        if (isBeforeFirstThumbnail(x, y)) {
+          index = 0
+        } else if (el) {
+          index = Number(el.dataset.thumbnail) + 1
+        }
+
+        checkoutBoard = () => gotoBoard(currentBoard, true)
       }
 
       if (!util.isUndefined(index)) {
@@ -1276,13 +1295,14 @@ const loadBoardUI = async () => {
           }
 
           renderThumbnailDrawer()
-          gotoBoard(currentBoard, true)
+
+          checkoutBoard()
         })
       } else {
         log.info('could not find point for move operation')
       }
-
       disableEditMode()
+
     }
   })
 
@@ -2086,8 +2106,17 @@ const loadBoardUI = async () => {
   // for debugging:
   //
   // remote.getCurrentWebContents().openDevTools()
-}
 
+
+  gridView = new GridView(boardData, boardPath, saveImageFile, getSelections,
+                          getCurrentBoard, setCurrentBoard, getContextMenu, renderThumbnailDrawerSelections, 
+                          gotoBoard, gridDrag, setSketchPaneVisibility, boardModel, setEditorModeTimer, renderTimelineModeControlView)
+}
+const getSelections = () => selections
+const getCurrentBoard = () => currentBoard
+const setCurrentBoard = (board) => currentBoard = board
+const getContextMenu = () => contextMenu
+const setEditorModeTimer = (timer) => editModeTimer = timer
 
 // whenever the scene changes
 const renderScene = async () => {
@@ -3436,6 +3465,61 @@ let goNextBoard = async (direction, shouldPreserveSelections = false) => {
   }
 }
 
+const ScrollTypes = {
+  VERTICAL: "vertical",
+  HORIZONTAL: "horizontal"
+}
+
+const isElementInViewport = (el, container) => {
+ 
+  let rectElement = el.getBoundingClientRect()
+  let rectContainer = container.getBoundingClientRect()
+  return (
+      rectElement.top >= rectContainer.top &&
+      rectElement.left >= rectContainer.left &&
+      rectElement.bottom <= rectContainer.bottom &&
+      rectElement.right <= rectContainer.right
+  );
+}
+let scrollInterval = {}
+const smoothScroll = (currentPosition, desiredPosition, element, selectedElement, scrollType = ScrollTypes.HORIZONTAL) => {
+  let steps = 10
+  let iteration = 0
+  let offset = 10
+  // Is in scroll area
+  if(isElementInViewport(selectedElement, element)) {
+    return
+  }
+  let padding = Number.parseInt(window.getComputedStyle(element, null).getPropertyValue('padding'))
+  let rectElement = selectedElement.getBoundingClientRect()
+  let rectContainer = element.getBoundingClientRect()
+  let difference
+  // Is Object higher 
+  if( rectElement.top >= rectContainer.top &&
+    rectElement.left >= rectContainer.left) {
+    difference = scrollType === ScrollTypes.HORIZONTAL ? rectElement.right - rectContainer.right : rectElement.bottom - rectContainer.bottom
+    difference += padding + offset
+  }
+  else {
+    difference = scrollType === ScrollTypes.HORIZONTAL ? rectElement.left - rectContainer.left : rectElement.top - rectContainer.top
+    difference -= padding - offset
+  }
+  let iterationStep = difference / steps
+  let interval = setInterval(() => {
+    if (currentPosition !== desiredPosition && iteration !== steps) {
+      if(scrollType === ScrollTypes.HORIZONTAL) {
+        element.scrollTo(currentPosition += iterationStep, 0);
+      } else {
+        element.scrollTo(0, currentPosition += iterationStep);
+      }
+      iteration ++;
+    } else {
+      clearInterval(interval);
+    }
+  }, 10);
+  return interval
+}
+
 let gotoBoard = (boardNumber, shouldPreserveSelections = false) => {
   if(isRecording && isRecordingStarted) {
     // make sure we capture the last frame
@@ -3471,49 +3555,65 @@ let gotoBoard = (boardNumber, shouldPreserveSelections = false) => {
 
     // let shouldRenderThumbnailDrawer = false
     if (shouldRenderThumbnailDrawer) {
+
       renderThumbnailDrawerSelections()
       for (var item of document.querySelectorAll('.thumbnail')) {
         item.classList.remove('active')
       }
 
-      let thumbDiv = document.querySelector(`[data-thumbnail='${currentBoard}']`)
-      if (thumbDiv) {
-        thumbDiv.classList.add('active')
-        thumbDiv.scrollIntoView()
+      let thumbDivs = document.querySelectorAll(`[data-thumbnail='${currentBoard}']`)
+      for(let i = 0; i < thumbDivs.length; i++) {
+        let thumbDiv = thumbDivs[i]
+        if(thumbDiv.dataset.type === 'thumbnail-grid') {
+          thumbDiv.classList.add('active')
+          let containerDiv = document.querySelector('.grid-view')
+          let rowContainer = thumbDiv.parentNode.parentNode
+          if(scrollInterval.interval && !scrollInterval.parentNode.isSameNode(rowContainer)) clearInterval(scrollInterval)
 
-        let thumbL = thumbDiv.offsetLeft
-        let thumbR = thumbDiv.offsetLeft + thumbDiv.offsetWidth
-
-        let containerDiv = document.querySelector('#thumbnail-container')
-        let containerL = containerDiv.scrollLeft
-        let containerR = containerDiv.scrollLeft + containerDiv.offsetWidth
-
-        if (thumbR >= containerR) {
-          // if right side of thumbnail is beyond the right edge of the visible container
-          // scroll the visible container
-          // to reveal up to the right edge of the thumbnail
-          containerDiv.scrollLeft = (thumbL - containerDiv.offsetWidth) + thumbDiv.offsetWidth + 100
-        } else if (containerL >= thumbL) {
-          // if left side of thumbnail is beyond the left edge of the visible container
-          // scroll the visible container
-          // to reveal up to the left edge of the thumbnail
-          containerDiv.scrollLeft = thumbL - 50
+          if(!scrollInterval.parentNode || !scrollInterval.parentNode.isSameNode(rowContainer)) {
+            scrollInterval.interval = smoothScroll(containerDiv.scrollTop, thumbDiv.parentNode.offsetTop, containerDiv, thumbDiv, ScrollTypes.VERTICAL)
+            scrollInterval.parentNode = rowContainer
+          }
+        } else {
+          if (thumbDiv) {
+            thumbDiv.classList.add('active')
+            let containerDiv = document.querySelector('#thumbnail-container')
+            thumbDiv.scrollIntoView()
+            let thumbL = thumbDiv.offsetLeft
+            let thumbR = thumbDiv.offsetLeft + thumbDiv.offsetWidth
+            
+            let containerL = containerDiv.scrollLeft
+            let containerR = containerDiv.scrollLeft + containerDiv.offsetWidth
+            
+            if (thumbR >= containerR) {
+              // if right side of thumbnail is beyond the right edge of the visible container
+              // scroll the visible container
+              // to reveal up to the right edge of the thumbnail
+              containerDiv.scrollLeft = (thumbL - containerDiv.offsetWidth) + thumbDiv.offsetWidth + 100
+            } else if (containerL >= thumbL) {
+              // if left side of thumbnail is beyond the left edge of the visible container
+              // scroll the visible container
+              // to reveal up to the left edge of the thumbnail
+              containerDiv.scrollLeft = thumbL - 50
+            }
+          } else {
+            //
+            // TODO when would this happen?
+            //
+            // wait for render, then update
+            setTimeout(
+              n => {
+                let newThumb = document.querySelector(`[data-thumbnail='${n}']`)
+                newThumb.classList.add('active')
+                newThumb.scrollIntoView()
+              },
+              10,
+              currentBoard
+            )
+          }
         }
-      } else {
-        //
-        // TODO when would this happen?
-        //
-        // wait for render, then update
-        setTimeout(
-          n => {
-            let newThumb = document.querySelector(`[data-thumbnail='${n}']`)
-            newThumb.classList.add('active')
-            newThumb.scrollIntoView()
-          },
-          10,
-          currentBoard
-        )
       }
+
     }
 
     renderMetaData()
@@ -4039,13 +4139,11 @@ let renderThumbnailDrawerSelections = () => {
   renderSceneTimeline()
 
   let thumbnails = document.querySelectorAll('.thumbnail')
-
   for (let thumb of thumbnails) {
     let i = Number(thumb.dataset.thumbnail)
-
     thumb.classList.toggle('active', currentBoard == i)
     thumb.classList.toggle('selected', selections.has(i))
-    thumb.classList.toggle('editing', isEditMode)
+    thumb.classList.toggle('editing', isEditMode())
   }
 }
 
@@ -4095,6 +4193,7 @@ const renderSceneTimeline = () => {
 let renderThumbnailDrawer = () => {
   updateSceneTiming()
 
+  isGridViewMode && gridView.renderGridView()
   // reflect the current view
   cycleViewMode(0)
 
@@ -4167,10 +4266,10 @@ let renderThumbnailDrawer = () => {
     html.push('</div>')
     i++
   }
-  document.querySelector('#thumbnail-drawer').innerHTML = html.join('')
+  let thumbnailDrawer = document.querySelector('#thumbnail-drawer')
+  thumbnailDrawer.innerHTML = html.join('')
 
   renderThumbnailButtons()
-
   renderThumbnailDrawerSelections()
 
   if (!contextMenu) {
@@ -4230,10 +4329,10 @@ let renderThumbnailDrawer = () => {
     })
   }
 
-  let thumbnails = document.querySelectorAll('.thumbnail')
+  let thumbnails = thumbnailDrawer.querySelectorAll('.thumbnail')
   for (var thumb of thumbnails) {
     thumb.addEventListener('pointerenter', (e) => {
-      if (!isEditMode && selections.size <= 1 && e.target.dataset.thumbnail === currentBoard) {
+      if (!isEditMode() && selections.size <= 1 && e.target.dataset.thumbnail === currentBoard) {
         contextMenu.attachTo(e.target)
       }
     })
@@ -4243,13 +4342,13 @@ let renderThumbnailDrawer = () => {
       }
     })
     thumb.addEventListener('pointermove', (e) => {
-      if (!isEditMode && selections.size <= 1 && e.target.dataset.thumbnail === currentBoard) {
+      if (!isEditMode() && selections.size <= 1 && e.target.dataset.thumbnail === currentBoard) {
         contextMenu.attachTo(e.target)
       }
     })
     thumb.addEventListener('pointerdown', (e) => {
       log.info('DOWN')
-      if (!isEditMode && selections.size <= 1) contextMenu.attachTo(e.target)
+      if (!isEditMode() && selections.size <= 1) contextMenu.attachTo(e.target)
 
       // always track cursor position
       updateThumbnailCursor(e.clientX, e.clientY)
@@ -4273,7 +4372,6 @@ let renderThumbnailDrawer = () => {
         let min = Math.min(...selections, index)
         let max = Math.max(...selections, index)
         selections = new Set(util.range(min, max))
-
         renderThumbnailDrawerSelections()
       } else if (currentBoard !== index) {
         // go to board by index
@@ -4562,15 +4660,7 @@ let getSceneColor = function (sceneString) {
   return ('black')
 }
 
-let setDragTarget = (x) => {
-  let containerRect = dragTarget.getBoundingClientRect()
-
-  let mouseX = x - containerRect.left
-  let midpointX = containerRect.width / 2
-
-  // distance ratio -1...0...1
-  let distance = (mouseX - midpointX) / midpointX
-
+const getScrollingStrength = (distance) => {
   // default is the dead zone at 0
   let strength = 0
   // -1..-0.5
@@ -4585,15 +4675,38 @@ let setDragTarget = (x) => {
   }
 
   strength = util.clamp(strength, -1, 1)
+  return strength
+}
+
+let setScroll = (point, target, elementSize, sideName, sizeName, scrollDirection) => {
+  let containerRect = target.getBoundingClientRect()
+  let mousePos = point - containerRect[sideName]
+  let midpointPos = containerRect[sizeName] / 2
+
+  // distance ratio -1...0...1
+  let distance = (mousePos - midpointPos) / midpointPos
+
+  let strength = getScrollingStrength(distance)
 
   // max speed is half of the average board width per pointermove
-  let speedlimit = Math.floor(60 * boardData.aspectRatio * 0.5)
+  let speedlimit = Math.floor(elementSize * boardData.aspectRatio * 0.5)
 
   // NOTE I don't bother clamping min/max because scrollLeft handles that for us
-  let newScrollLeft = dragTarget.scrollLeft + (strength * speedlimit)
+  let newScroll = target[scrollDirection] + (strength * speedlimit)
 
-  dragTarget.scrollLeft = newScrollLeft
+  target[scrollDirection] = newScroll
 }
+
+let scrollTarget = ({x = null, y = null}, target, elementSize) => {
+  if(x) {
+    setScroll(x, target, elementSize, 'left', 'width', 'scrollLeft')
+  } 
+  if(y) {
+    setScroll(y, target, elementSize, 'top', 'height', 'scrollTop')
+  }
+
+}
+
 
 let updateDrag = () => {
   if (util.isUndefined(lastPointer.x) || util.isUndefined(lastPointer.y)) {
@@ -4601,10 +4714,14 @@ let updateDrag = () => {
   }
 
 
-  if (isEditMode && dragMode) {
-    setDragTarget(lastPointer.x)
+  if (isEditMode() && dragMode) {
+
+    !gridView.IsEditMode ? scrollTarget({x:lastPointer.x}, dragTarget, 60) :
+                          scrollTarget({y:lastPointer.y}, document.querySelector('.grid-view'), gridView.getDefaultHeight())
     updateThumbnailCursor(lastPointer.x, lastPointer.y)
     renderThumbnailCursor()
+    gridView.IsEditMode && gridView.updateGridViewCursor(lastPointer.x, lastPointer.y)
+    gridView.IsEditMode && gridView.renderGridViewCursor()
   }
 }
 
@@ -4899,7 +5016,7 @@ window.onkeydown = (e) => {
     if (isCommandPressed('drawing:exit-current-mode')) {
       e.preventDefault()
 
-      if (dragMode && isEditMode && selections.size) {
+      if (dragMode && isEditMode() && selections.size) {
         disableEditMode()
         disableDragMode()
       } else {
@@ -6170,8 +6287,8 @@ let reorderBoardsRight = () => {
 }
 
 let enableEditMode = () => {
-  if (!isEditMode && selections.size) {
-    isEditMode = true
+  if (!isEditMode() && selections.size) {
+    editModeState = true
     thumbnailCursor.visible = true
     renderThumbnailCursor()
     renderThumbnailDrawerSelections()
@@ -6183,12 +6300,15 @@ let enableEditMode = () => {
 }
 
 let disableEditMode = () => {
-  if (isEditMode) {
+  if (isEditMode()) {
     sfx.playEffect('metal')
     sfx.negative()
-    isEditMode = false
+    editModeState = false
     thumbnailCursor.visible = false
+    gridView.gridViewCursor.visible = false
+    gridView.IsEditMode = false
     renderThumbnailCursor()
+    isGridViewMode && gridView.renderGridViewCursor()
     renderThumbnailDrawerSelections()
   }
 }
@@ -6196,7 +6316,6 @@ let disableEditMode = () => {
 let thumbnailFromPoint = (x, y, offset) => {
   if (!offset) { offset = 0 }
   let el = document.elementFromPoint(x-offset, y)
-
   if (!el || !el.classList.contains('thumbnail')) return null
 
   // if part of a multi-selection, base from right-most element
@@ -6681,16 +6800,68 @@ const updateSceneFromScript = async () => {
   renderScript()
 }
 
+const setSketchPaneVisibility = (isVisible) => {
+  let storyboarderSketchPane = document.querySelector("#storyboarder-sketch-pane")
+  let gridViewElement = document.querySelector('.grid-view')
+  let container = storyboarderSketchPane.getElementsByClassName("container")[0]
+  if(isVisible) {
+    isGridViewMode = false
+    container.style["position"] = "relative"
+    container.style["left"] = "0px"
+    gridViewElement.style["position"] = "absolute"
+    gridViewElement.style["left"] = "-99999px"
+    gridView.cleanUpGridView()
+    // NOTE(): A hackish way to update sketchpane
+    gotoBoard(getCurrentBoard())
+  } else {
+    isGridViewMode = true
+    container.style["position"] = "absolute"
+    container.style["left"] = "-99999px"
+    gridViewElement.style["position"] = "relative"
+    gridViewElement.style["left"] = "0px"
+  }
+}
+
+//#region Grid view
+
+const gridDrag = (e)=>{
+  if (e.pointerType == 'pen' || e.pointerType == 'mouse') {
+    dragTarget = document.querySelector('.grid-view')
+    dragTarget.style.overflow = 'hidden'
+    dragTarget.style.scrollBehavior = 'unset'
+    dragMode = true
+    dragPoint = [e.pageX, e.pageY]
+    scrollPoint = [dragTarget.scrollLeft, dragTarget.scrollTop]
+    periodicDragUpdate()
+  }
+}
+
+// TODO(): Find a better way to switch modes
+let isGridViewMode = false
+//#endregion
 const TimelineModeControlView = ({ mode = 'sequence', show = false }) => {
   let style = { display: show ? 'flex' : 'none' }
 
+  useEffect(() => {
+    setSketchPaneVisibility(true)
+  }, [])
+
   const onBoardsSelect = () => {
     shouldRenderThumbnailDrawer = false
+    setSketchPaneVisibility(true)
     renderThumbnailDrawer()
   }
   const onTimelineSelect = () => {
     shouldRenderThumbnailDrawer = true
+    setSketchPaneVisibility(true)
     renderThumbnailDrawer()
+  }
+  const onGridViewSelect = () => {
+    shouldRenderThumbnailDrawer = true
+    setSketchPaneVisibility(false)
+    renderThumbnailDrawer()
+    gridView.renderGridView()
+    gotoBoard(getCurrentBoard())
   }
 
   return h(
@@ -6706,19 +6877,29 @@ const TimelineModeControlView = ({ mode = 'sequence', show = false }) => {
       ],
       ['div.spacer'],
       ['div.btn', {
-        className: mode !== 'sequence' ? 'selected' : null,
+        className: mode === 'time' ? 'selected' : null,
         onPointerUp: onBoardsSelect
       },
         ['svg', { className: 'icon' },
           ['use', { xlinkHref: './img/symbol-defs.svg#timeline-timeline' }]
         ],
         ['span', 'Timeline']
+      ],
+      ['div.spacer'],
+      ['div.btn', {
+        className: mode === 'grid-view' ? 'selected' : null,
+        onPointerUp: onGridViewSelect
+      },
+        ['svg', { className: 'icon' },
+          ['use', { xlinkHref: './img/symbol-defs.svg#timeline-timeline' }]
+        ],
+        ['span', 'Grid View']
       ]
     ]
   )
 }
 const renderTimelineModeControlView = ({ show = false }) => {
-  let mode = shouldRenderThumbnailDrawer ? 'sequence' : 'time'
+  let mode = !shouldRenderThumbnailDrawer ? 'time' : isGridViewMode ? 'grid-view' : 'sequence' 
   ReactDOM.render(
     h([TimelineModeControlView, { mode, show }]),
     document.getElementById('timeline-mode-control-view')

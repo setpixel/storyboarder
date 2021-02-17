@@ -203,6 +203,29 @@ body::-webkit-scrollbar {
   animation-name: bounce;
 }
 
+#grid-view-cursor {
+  position: relative;
+  top: 0;
+  left: 0;
+  margin-top: 7px;
+
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 10px solid #999;
+  transition: left .1s ease-in;
+  animation-delay: 0s;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-in;
+  animation-iteration-count: infinite;
+  animation-name: bounce;
+}
+#grid-cursor-container {
+  position: absolute;
+  z-index: 9999;
+}
+
 @keyframes bounce {
   0% {
     top: 5px;
@@ -217,7 +240,8 @@ body::-webkit-scrollbar {
 
 
 
-#thumbnail-container .thumbnail * {
+#thumbnail-container .thumbnail *,
+.grid-view .thumbnail * {
      pointer-events: none;
 }
 
@@ -248,13 +272,15 @@ body::-webkit-scrollbar {
   margin-right: 10px;
 }
 
-#thumbnail-drawer .thumbnail.active {
+#thumbnail-drawer .thumbnail.active,
+.grid-view .thumbnail.active {
   background: #8d89cf;
   color: #000;
   transition: all 0s ease-out;
 }
 
-#thumbnail-drawer .thumbnail.selected {
+#thumbnail-drawer .thumbnail.selected,
+.grid-view .thumbnail.selected {
   background: #8d89cf;
   color: #000;
   top: 0px;
@@ -263,7 +289,8 @@ body::-webkit-scrollbar {
   box-shadow: none;
   z-index: 999;
 }
-#thumbnail-drawer .thumbnail.selected.editing {
+#thumbnail-drawer .thumbnail.selected.editing,
+.grid-view .thumbnail.selected.editing {
   background: #999;
   top: -10px;
   position: relative;
@@ -272,14 +299,16 @@ body::-webkit-scrollbar {
   box-shadow: 0px 10px 0px rgba(0,0,0,0.1);
 }
 
-#thumbnail-drawer img {
+#thumbnail-drawer img,
+.grid-view img {
   background: white;
   border-radius: 3px;
   position: relative;
   box-shadow: none;
 }
 
-#thumbnail-drawer img:after {
+#thumbnail-drawer img:after,
+.grid-view img:after {
   content: "";
   position: absolute;
   z-index: 2;
@@ -297,11 +326,13 @@ body::-webkit-scrollbar {
   flex-direction: row;
 }
 
-#thumbnail-drawer .thumbnail .number {
+#thumbnail-drawer .thumbnail .number,
+.grid-view .thumbnail .number {
   font-weight: 700;
 }
 
-#thumbnail-drawer .thumbnail .audio svg {
+#thumbnail-drawer .thumbnail .audio svg,
+.grid-view .thumbnail .audio svg  {
   width: 14px;
   height: 14px;
   vertical-align: top;
@@ -311,11 +342,13 @@ body::-webkit-scrollbar {
   margin-bottom: -3px;
 }
 
-#thumbnail-drawer .thumbnail.selected .audio svg {
+#thumbnail-drawer .thumbnail.selected .audio svg,
+.grid-view .thumbnail.selected .audio svg  {
   --color1: #000;
 }
 
-#thumbnail-drawer .thumbnail .duration {
+#thumbnail-drawer .thumbnail .duration,
+.grid-view .thumbnail .duration {
   opacity: 0.8;
 }
 
@@ -1003,4 +1036,53 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 #shot-generator-container .shot-generator-layer-thumbnail * {
   -webkit-user-drag: none;
   user-drag: none;
+}
+
+/* The grid view styles */
+.grid-view {
+  position: relative;
+
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  overflow: auto;
+}
+
+.grid-view .thumbnail {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #444;
+  padding: 5px;
+  font-size: 10px;
+  color: #888;
+  font-weight: 100;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+  transition: all 0s ease-in-out;
+  align-content: center;
+  border-radius: 3px;
+}
+
+.grid-view .thumbnail-container { 
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  margin-right: 0px;
+  font-size: 10px;
+  align-content: center;
+}
+
+.grid-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.grid-view .thumbnail .info {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }

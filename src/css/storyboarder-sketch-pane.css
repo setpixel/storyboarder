@@ -7,7 +7,6 @@
 
 #storyboarder-sketch-pane {
   flex: 1;
-  display: flex;
   position: relative;
   width: 100%;
   height: 100%;
