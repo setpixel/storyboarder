@@ -9,8 +9,8 @@ const RoundedBoxGeometry = RoundedBoxGeometryCreator(THREE)
 
 extend({RoundedBoxGeometry})
 
-const Image = React.memo(({ sceneObject, isSelected, imagesPaths, ...props }) => {
-  const {asset: texture} = useAsset(imagesPaths[0] || null)
+const Image = React.memo(({ sceneObject, isSelected, imagePath, ...props }) => {
+  const {asset: texture} = useAsset(imagePath || null)
   
   const aspect = useRef(1)
   const ref = useRef()
@@ -33,7 +33,7 @@ const Image = React.memo(({ sceneObject, isSelected, imagesPaths, ...props }) =>
         material.map = texture
         material.needsUpdate = true
     } 
-  }, [texture, imagesPaths[0]])
+  }, [texture, imagePath])
 
   useEffect(() => {
     material.opacity = sceneObject.opacity
@@ -65,7 +65,6 @@ const Image = React.memo(({ sceneObject, isSelected, imagesPaths, ...props }) =>
         } )})
       props.objectRotationControl.setCharacterId(ref.current.uuid)
       props.objectRotationControl.selectObject(ref.current, ref.current.uuid)
-      props.objectRotationControl.IsEnabled = !sceneObject.locked
       props.objectRotationControl.control.setShownAxis(axis.X_axis | axis.Y_axis | axis.Z_axis)
     } else {
       if(props.objectRotationControl && props.objectRotationControl.isSelected(ref.current)) {
@@ -76,10 +75,6 @@ const Image = React.memo(({ sceneObject, isSelected, imagesPaths, ...props }) =>
 
   const { x, y, z, visible, height, rotation, locked, blocked } = sceneObject
 
-  useEffect(() => {
-    if(!props.objectRotationControl || !isSelected) return
-    props.objectRotationControl.IsEnabled = !locked
-  }, [locked])
 
   return (
     <group

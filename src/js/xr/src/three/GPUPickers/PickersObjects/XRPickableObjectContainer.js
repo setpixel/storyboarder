@@ -89,7 +89,9 @@ class XRPickableObjectContainer extends Pickable
     {
         this.listOfChangedObjects = [];
         this.getMeshes(this.sceneObject, this.listOfChangedObjects, excludingList);
-        return this.listOfChangedObjects.length === 0 ? false : true;
+        let isChanged = this.listOfChangedObjects.length === 0 ? false : true
+        if(this.sceneObject.visible !== this.node.visible) isChanged = true
+        return isChanged; 
     }
 
     getMeshes(object, listOfMeshes, excludingList)
@@ -123,8 +125,12 @@ class XRPickableObjectContainer extends Pickable
             id = this.idPool.getAvaibleId();
             let sceneMesh = this.listOfChangedObjects[i];
             super.initialize(id);
-            this.pickingMaterials.push(this.pickingMaterial);
-            this.pickingMesh = new THREE.Mesh(sceneMesh.geometry, this.pickingMaterial);
+            let pickingMaterial = this.pickingMaterial
+            pickingMaterial.depthTest = sceneMesh.material.depthTest;
+            pickingMaterial.depthWrite = sceneMesh.material.depthWrite;
+            pickingMaterial.transparent = sceneMesh.material.transparent;  
+            this.pickingMaterials.push(pickingMaterial);
+            this.pickingMesh = new THREE.Mesh(sceneMesh.geometry, pickingMaterial);
             this.node.add(this.pickingMesh);
             this.changedIds = [];
             this.pickingMeshes.push(this.pickingMesh);
@@ -132,6 +138,7 @@ class XRPickableObjectContainer extends Pickable
             this.pickingMesh.pickerId = id;
             this.listOfChangedObjects[i] = {pickingMesh: this.pickingMesh, sceneMesh: sceneMesh};
         }
+        this.node.visible = this.sceneObject.visible; 
     }
 
     dispose()

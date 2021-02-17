@@ -40,7 +40,6 @@ const Light = React.memo(({sceneObject, isSelected, children, show = true,...pro
         } )})
       props.objectRotationControl.setCharacterId(ref.current.uuid)
       props.objectRotationControl.selectObject(ref.current, ref.current.uuid)
-      props.objectRotationControl.IsEnabled = !sceneObject.locked
       props.objectRotationControl.control.setShownAxis(axis.X_axis | axis.Y_axis | axis.Z_axis)
     } else {
       setLightColor(0x8c78f1)

@@ -201,7 +201,6 @@ const SceneManagerR3fLarge = connect(
       //#region initialization of objectRotationControl 
       objectRotationControl.current = new ObjectRotationControl(scene.children[0], camera, gl.domElement)
       objectRotationControl.current.control.canSwitch = false
-      objectRotationControl.current.isEnabled = true
       //#endregion
       return () => {
         if(objectRotationControl.current) {
@@ -454,7 +453,7 @@ const SceneManagerR3fLarge = connect(
             let sceneObject = sceneObjects[id]
             return <SimpleErrorBoundary key={ id }>
               <Image
-                imagesPaths={getFilePathForImages(sceneObject, storyboarderFilePath)}
+                imagesPaths={getFilePathForImages(sceneObject, storyboarderFilePath)[0]}
                 sceneObject={ sceneObject }
                 isSelected={ selections.includes(id) }
                 updateObject={ updateObject }
@@ -469,7 +468,7 @@ const SceneManagerR3fLarge = connect(
           return <Group
             key={ sceneObject.id }
             isSelected={ selections.includes(sceneObject.id) }
-            updateObject={ updateObject }
+            updateObjects={ updateObjects }
             withState={ withState }
             objectRotationControl={ objectRotationControl.current }
             { ...sceneObject }

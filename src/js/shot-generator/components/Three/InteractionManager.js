@@ -236,6 +236,7 @@ const InteractionManager = connect(
                 let objectId = target.characterId
                 let targetElement = target.object
                 if(!targetElement) return
+                if(!targetElement.userData.locked) target.select(event)
                 if(targetElement.type === "Bone") {
                     let characters = intersectables.current.filter(value => value.uuid === objectId)
                     target = characters[0]

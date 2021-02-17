@@ -116,7 +116,6 @@ const ModelObject = React.memo(({path, isIcon = false, sceneObject, isSelected, 
       props.objectRotationControl.setCharacterId(ref.current.uuid)
       props.objectRotationControl.selectObject(ref.current, ref.current.uuid)
       props.objectRotationControl.control.setShownAxis(axis.X_axis | axis.Y_axis | axis.Z_axis)
-      props.objectRotationControl.IsEnabled = !sceneObject.locked
     }
     else {
       if(props.objectRotationControl && props.objectRotationControl.isSelected(ref.current)) {
@@ -134,11 +133,6 @@ const ModelObject = React.memo(({path, isIcon = false, sceneObject, isSelected, 
   }, [])
 
   const { x, y, z, visible, width, height, depth, rotation, locked, blocked } = sceneObject
-
-  useEffect(() => {
-    if(!props.objectRotationControl || !isSelected) return
-    props.objectRotationControl.IsEnabled = !locked
-  }, [locked])
 
   return <group
     ref={ref}
