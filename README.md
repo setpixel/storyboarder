@@ -89,6 +89,7 @@ Need a straight line? Hold shift while you're drawing and you got straight lines
 * Move Contents: <kbd>Hold command</kbd>
 * Scale Contents: <kbd>Cmd</kbd>+<kbd>Option</kbd>
 * Color Pick: <kbd>Hold Option</kbd>
+* View Modes: Hit <kbd>Tab</kbd> to cycle through view modes
 
 ## FAQ
 
