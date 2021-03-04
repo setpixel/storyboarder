@@ -764,12 +764,19 @@ const useInteractionsManager = ({
     let worldScale = useStoreApi.getState().worldScale
     let hmd = camera.parent
     let elevationDisplacement = 0.5
+    // Value of -2.6 is used since the XR camera is already 1.6 mtrs above the ground by default.
+    let minHeight = -2.6
 
     if (event.target.uuid === rightController.uuid) {
       hmd.position.y += elevationDisplacement
     } else {
-      if (hmd.position.y !== 0) {
+      // This makes sure that the camera moves upto 1mtr below the surface
+      if (hmd.position.y > minHeight) {
         hmd.position.y -= elevationDisplacement
+        // Clamp the value to 2.6mtrs below the ground in case the y values becomes lesser.
+        if (hmd.position.y < minHeight) {
+          hmd.position.y = minHeight
+        }
       }
     }
 
