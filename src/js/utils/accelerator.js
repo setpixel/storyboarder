@@ -2,12 +2,13 @@ var os = require('os')
 
 const IS_MAC = os.platform() === 'darwin'
 
-const CMD_OR_CTRL = IS_MAC ? '\u2318' : '\u2303'
+const CODE_CMD_OR_CTRL = IS_MAC ? 'Command' : 'Control'
+const CMD_OR_CTRL = IS_MAC ? 'Cmd' : 'Ctrl'
 
 const MODIFIER_MAP = {
   'Command': '\u2318',
   'Cmd': '\u2318',
-  'CommandOrControl': CMD_OR_CTRL,
+  'CommandOrControl': CODE_CMD_OR_CTRL,
   'CmdOrCtrl': CMD_OR_CTRL,
   'Super': '\u2318',
   'Control': '\u2303',

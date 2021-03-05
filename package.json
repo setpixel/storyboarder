@@ -35,7 +35,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wonderunit/storyboarder.git"
+    "url": "https://github.com/wonderunit/storyboarder.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wonderunit/storyboarder/issues"
   },
   "keywords": [
     "fountain",
