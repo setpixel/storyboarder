@@ -71,7 +71,7 @@
     "grainImage": "grainpaper2",
     "pressureOpacity": 0.5,
     "pressureSize": 0.8,
-    "sizecale": 0.8,
+    "scale": 0.8,
     "pressureBleed": 2,
     "tiltSize": 3.8,
     "tiltOpacity": 1,
