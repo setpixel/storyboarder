@@ -49,9 +49,9 @@ Works with Pens on any tablet or Cintiq or even a Microsoft Surface. Also works 
 * **Pen** for inking strong lines
 * **Brush** for filling in some shading
 
-You can also specificy 3 brush sizes for each type.
+You can also specify 3 brush sizes for each type.
 
-Each brush has its own 5 color pallete. You can set all the colors as you like.
+Each brush has its own 5 color palette. You can set all the colors as you like.
 
 There are no layers. Again, you're boarding story ideas. Managing layers creates so much unneeded complexity and UI mess. A board artist that uses layers probably voted for Trump - or paid way too much for "Pro" storyboard software.
 
