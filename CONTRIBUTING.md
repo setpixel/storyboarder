@@ -16,7 +16,7 @@ Don't worry if you think someone submitted the issue before, if you have somethi
 
 ## Working with us
 
-Would you like to contribue to the project? Yay!
+Would you like to contribute to the project? Yay!
 
 If you submit a pull request, we will need you to sign a CLA: https://cla-assistant.io/wonderunit/storyboarder
 
